@@ -75,9 +75,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.KPGTB</groupId>
+            <groupId>com.github.kpgtb</groupId>
             <artifactId>KKcore</artifactId>
-            <version>LATEST</version>
+            <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
