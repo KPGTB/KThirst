@@ -1,0 +1,3 @@
+maxThirst: 20.0
+minusThirstPerMinute: 0.5
+hpPerSecond: 1.0

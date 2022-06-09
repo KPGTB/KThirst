@@ -7,12 +7,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.*;
+
 public class UserManager {
 
     private final KKthirst plugin;
+    private final HashMap<UUID, User> users;
 
     public UserManager(KKthirst plugin) {
         this.plugin = plugin;
+        users = new HashMap<>();
 
         final double thirstPerMinute = plugin.getConfig().getDouble("minusThirstPerMinute");
         final double hpPerSecond = plugin.getConfig().getDouble("hpPerSecond");
@@ -20,10 +24,10 @@ public class UserManager {
         BukkitTask thirst = new BukkitRunnable() {
             @Override
             public void run() {
-                for(User user : KKthirst.users.values()) {
+                for(User user : users.values()) {
                     if(!Bukkit.getOfflinePlayer(user.getUuid()).isOnline()) {
                         user.save();
-                        KKthirst.users.remove(user.getUuid());
+                        users.remove(user.getUuid());
                         continue;
                     }
 
@@ -35,12 +39,12 @@ public class UserManager {
                     user.setThirst(userThirst - thirstPerMinute);
                 }
             }
-        }.runTaskTimer(plugin, 60 * 20, 60 * 20);
+        }.runTaskTimer(plugin, 15 * 20, 15 * 20);
 
         BukkitTask autoSaver = new BukkitRunnable() {
             @Override
             public void run() {
-                for(User user : KKthirst.users.values()) {
+                for(User user : users.values()) {
                     user.save();
                 }
             }
@@ -74,5 +78,23 @@ public class UserManager {
         }.runTaskTimer(plugin, 20,20);
     }
 
+    public void addUser(UUID uuid, User user) {
+        users.put(uuid, user);
+    }
+
+    public void removeUser(UUID uuid) {
+        users.remove(uuid);
+    }
+
+    public User getUser(UUID uuid) {
+        if(!users.containsKey(uuid)) {
+            return null;
+        }
+        return users.get(uuid);
+    }
+
+    public Collection<User> getUsers() {
+        return users.values();
+    }
 
 }

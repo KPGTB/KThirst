@@ -2,11 +2,16 @@ package io.github.kpgtb.kkthirst.listener;
 
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkcore.manager.LanguageManager;
+import io.github.kpgtb.kkcore.manager.UsefulObjects;
 import io.github.kpgtb.kkcore.util.MessageUtil;
-import io.github.kpgtb.kkthirst.KKthirst;
+import io.github.kpgtb.kkthirst.ThirstUsefulObjects;
 import io.github.kpgtb.kkthirst.User;
+import io.github.kpgtb.kkthirst.manager.UserManager;
+import io.github.kpgtb.kkui.KKui;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -17,32 +22,45 @@ public class JoinListener implements Listener {
     private final LanguageManager languageManager;
     private final DataManager dataManager;
     private final FileConfiguration config;
+    private final UserManager userManager;
 
-    public JoinListener(MessageUtil messageUtil, LanguageManager languageManager, DataManager dataManager, FileConfiguration config) {
-        this.messageUtil = messageUtil;
-        this.languageManager = languageManager;
-        this.dataManager = dataManager;
-        this.config = config;
+    public JoinListener(UsefulObjects usefulObjects){
+        ThirstUsefulObjects thirstUsefulObjects = null;
+        try {
+            thirstUsefulObjects = (ThirstUsefulObjects) usefulObjects;
+        } catch(ClassCastException e) {
+            System.out.println("KKthirst >> Error while creating JoinListener!");
+            Bukkit.shutdown();
+        }
+
+        this.messageUtil = thirstUsefulObjects.getMessageUtil();
+        this.languageManager = thirstUsefulObjects.getLanguageManager();
+        this.dataManager = thirstUsefulObjects.getDataManager();
+        this.config = thirstUsefulObjects.getConfig();
+        this.userManager = thirstUsefulObjects.getUserManager();
     }
 
+    @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        if(KKthirst.users.containsKey(uuid)) {
-            KKthirst.users.get(uuid).save();
-            KKthirst.users.remove(uuid);
+        if(userManager.getUser(uuid) != null) {
+            userManager.getUser(uuid).save();
+            userManager.removeUser(uuid);
         }
 
+        double maxThirst = config.getDouble("maxThirst");
         // If user do not exists in database
         if(!dataManager.getKeys("users").contains(uuid.toString())) {
-            double defaultThirst = config.getDouble("maxThirst");
-            dataManager.set("users", uuid.toString(), "thirst", defaultThirst);
+            dataManager.set("users", uuid.toString(), "thirst", maxThirst);
         }
 
         double playerThirst = (double) dataManager.get("users", uuid.toString(), "thirst");
-        User user = new User(uuid, playerThirst, dataManager);
+        User user = new User(uuid, playerThirst, maxThirst,dataManager);
 
-        KKthirst.users.put(uuid, user);
+        userManager.addUser(uuid, user);
+
+        KKui.getUiManager().addUI(uuid, user.getBaseUI());
     }
 }
