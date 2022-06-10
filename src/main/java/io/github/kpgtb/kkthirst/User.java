@@ -14,13 +14,16 @@ public class User {
     private final DataManager dataManager;
     private final BaseUI baseUI;
 
-    public User(UUID uuid, double thirst, double maxThirst, DataManager dataManager) {
+    private boolean damaging;
+
+    public User(UUID uuid, double thirst, double maxThirst, DataManager dataManager, int uiOffset) {
         this.uuid = uuid;
         this.thirst = thirst;
         this.maxThirst = maxThirst;
 
         this.dataManager = dataManager;
-        baseUI = new BaseUI("", Alignment.LEFT, 100);
+        this.damaging = false;
+        baseUI = new BaseUI("", Alignment.LEFT, uiOffset);
 
         setupUI();
     }
@@ -38,9 +41,9 @@ public class User {
             emptyIconsInUI -= 1;
         }
 
-        String fullIconChar = "\uA001\uF801";
-        String halfIconChar = "\uA002\uF801";
-        String emptyIconChar = "\uA003\uF801";
+        String fullIconChar = "\uA001\uF802";
+        String halfIconChar = "\uA002\uF802";
+        String emptyIconChar = "\uA003\uF802";
 
         StringBuilder ui = new StringBuilder();
         for(int i = 0; i < emptyIconsInUI; i++) {
@@ -77,5 +80,13 @@ public class User {
 
     public BaseUI getBaseUI() {
         return baseUI;
+    }
+
+    public boolean isDamaging() {
+        return damaging;
+    }
+
+    public void setDamaging(boolean damaging) {
+        this.damaging = damaging;
     }
 }

@@ -47,6 +47,7 @@ public class JoinListener implements Listener {
 
         if(userManager.getUser(uuid) != null) {
             userManager.getUser(uuid).save();
+            KKui.getUiManager().removeUI(uuid, userManager.getUser(uuid).getBaseUI());
             userManager.removeUser(uuid);
         }
 
@@ -57,7 +58,7 @@ public class JoinListener implements Listener {
         }
 
         double playerThirst = (double) dataManager.get("users", uuid.toString(), "thirst");
-        User user = new User(uuid, playerThirst, maxThirst,dataManager);
+        User user = new User(uuid, playerThirst, maxThirst,dataManager, config.getInt("uiOffset"));
 
         userManager.addUser(uuid, user);
 

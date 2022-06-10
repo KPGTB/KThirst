@@ -43,9 +43,9 @@ public final class KKthirst extends JavaPlugin {
         Plugin core = Bukkit.getPluginManager().getPlugin("KKcore");
 
         //Register font
-        FontWidth.registerCustomChar('\uA001', 8);
-        FontWidth.registerCustomChar('\uA002', 8);
-        FontWidth.registerCustomChar('\uA003', 8);
+        FontWidth.registerCustomChar('\uA001', 9);
+        FontWidth.registerCustomChar('\uA002', 9);
+        FontWidth.registerCustomChar('\uA003', 9);
 
         LanguageManager languageManager = new LanguageManager(
                 "KKthirst",

@@ -32,8 +32,10 @@ public class UserManager {
                     }
 
                     double userThirst = user.getThirst();
-                    if(userThirst - thirstPerMinute <=0) {
+                    if(userThirst - thirstPerMinute < 0 && !user.isDamaging()) {
+                        user.setThirst(0.0);
                         damagePlayer(user, hpPerSecond);
+                        user.setDamaging(true);
                         continue;
                     }
                     user.setThirst(userThirst - thirstPerMinute);
@@ -56,10 +58,12 @@ public class UserManager {
             @Override
             public void run() {
                 if(user.getThirst() > 0) {
+                    user.setDamaging(false);
                     cancel();
                 }
 
                 if(!Bukkit.getOfflinePlayer(user.getUuid()).isOnline()) {
+                    user.setDamaging(false);
                     cancel();
                 }
 
@@ -70,10 +74,11 @@ public class UserManager {
                     player.setHealth(0.0);
                     user.setThirst(plugin.getConfig().getDouble("maxThirst"));
                     user.save();
+                    user.setDamaging(false);
                     cancel();
                 }
 
-                player.setHealth(playerHP - hpPerSecond);
+                player.damage(hpPerSecond);
             }
         }.runTaskTimer(plugin, 20,20);
     }
