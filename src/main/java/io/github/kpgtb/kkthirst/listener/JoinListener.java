@@ -1,9 +1,7 @@
 package io.github.kpgtb.kkthirst.listener;
 
 import io.github.kpgtb.kkcore.manager.DataManager;
-import io.github.kpgtb.kkcore.manager.LanguageManager;
 import io.github.kpgtb.kkcore.manager.UsefulObjects;
-import io.github.kpgtb.kkcore.util.MessageUtil;
 import io.github.kpgtb.kkthirst.ThirstUsefulObjects;
 import io.github.kpgtb.kkthirst.User;
 import io.github.kpgtb.kkthirst.manager.UserManager;
@@ -18,8 +16,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import java.util.UUID;
 
 public class JoinListener implements Listener {
-    private final MessageUtil messageUtil;
-    private final LanguageManager languageManager;
     private final DataManager dataManager;
     private final FileConfiguration config;
     private final UserManager userManager;
@@ -33,8 +29,6 @@ public class JoinListener implements Listener {
             Bukkit.shutdown();
         }
 
-        this.messageUtil = thirstUsefulObjects.getMessageUtil();
-        this.languageManager = thirstUsefulObjects.getLanguageManager();
         this.dataManager = thirstUsefulObjects.getDataManager();
         this.config = thirstUsefulObjects.getConfig();
         this.userManager = thirstUsefulObjects.getUserManager();
@@ -45,8 +39,7 @@ public class JoinListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        if(userManager.getUser(uuid) != null) {
-            userManager.getUser(uuid).save();
+        if(userManager.hasUser(uuid)) {
             KKui.getUiManager().removeUI(uuid, userManager.getUser(uuid).getBaseUI());
             userManager.removeUser(uuid);
         }

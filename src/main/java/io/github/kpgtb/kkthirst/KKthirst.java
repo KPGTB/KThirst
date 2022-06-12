@@ -12,8 +12,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 //TODO:
-// ActionBar
-// Req TXT
 // Machines
 // Drinks
 
@@ -85,6 +83,7 @@ public final class KKthirst extends JavaPlugin {
                 thirstUsefulObjects
         );
         listenerManager.registerListeners("io.github.kpgtb.kkthirst.listener");
+
     }
 
     @Override

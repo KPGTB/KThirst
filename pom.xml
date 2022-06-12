@@ -77,14 +77,20 @@
         <dependency>
             <groupId>com.github.kpgtb</groupId>
             <artifactId>KKcore</artifactId>
-            <version>1.1</version>
+            <version>main-e77a9a4a9e-1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.kpgtb</groupId>
             <artifactId>KKui</artifactId>
-            <version>1.2</version>
+            <version>main-b0e24f3b12-1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

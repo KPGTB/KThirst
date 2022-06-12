@@ -2,6 +2,7 @@ package io.github.kpgtb.kkthirst.manager;
 
 import io.github.kpgtb.kkthirst.KKthirst;
 import io.github.kpgtb.kkthirst.User;
+import io.github.kpgtb.kkui.KKui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,6 +28,7 @@ public class UserManager {
                 for(User user : users.values()) {
                     if(!Bukkit.getOfflinePlayer(user.getUuid()).isOnline()) {
                         user.save();
+                        KKui.getUiManager().removeUI(user.getUuid(), user.getBaseUI());
                         users.remove(user.getUuid());
                         continue;
                     }
@@ -100,6 +102,10 @@ public class UserManager {
 
     public Collection<User> getUsers() {
         return users.values();
+    }
+
+    public boolean hasUser(UUID uuid) {
+        return users.containsKey(uuid);
     }
 
 }
