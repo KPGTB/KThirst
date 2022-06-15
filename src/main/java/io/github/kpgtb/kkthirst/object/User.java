@@ -1,4 +1,4 @@
-package io.github.kpgtb.kkthirst;
+package io.github.kpgtb.kkthirst.object;
 
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkui.ui.Alignment;
@@ -66,7 +66,11 @@ public class User {
     }
 
     public void setThirst(double thirst) {
-        this.thirst = thirst;
+        if(thirst > maxThirst) {
+            this.thirst = maxThirst;
+        } else {
+            this.thirst = thirst;
+        }
         setupUI();
     }
 
@@ -84,6 +88,10 @@ public class User {
 
     public boolean isDamaging() {
         return damaging;
+    }
+
+    public double getMaxThirst() {
+        return maxThirst;
     }
 
     public void setDamaging(boolean damaging) {

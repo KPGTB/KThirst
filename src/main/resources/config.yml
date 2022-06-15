@@ -2,3 +2,39 @@ maxThirst: 20.0
 minusThirstPerMinute: 0.5
 hpPerSecond: 1.0
 uiOffset: 15
+
+# Default drinks data
+# You can add own custom drinks by using command /addDrink
+registerDefaultDrinks: true
+
+dirtyWater:
+  name: "&6Dirty water"
+  lore:
+    - ""
+    - "&eDon't drink this"
+    - ""
+    - "&eYou can clean this water in filtering machine"
+    - ""
+  customModelData: 0 # For resource packs. 0 - nothing
+  thirstPoints: 3.0
+  color:
+    r: 53
+    g: 26
+    b: 3
+  effects: # - "EFFECT_NAME DURATION STRENGTH" # Duration is in ticks! 20 tick = 1 sec
+    - "WEAKNESS 600 2"
+    - "POISON 200 1"
+
+cleanWater:
+  name: "&2Water"
+  lore:
+    - ""
+    - "&bYou can drink this water"
+    - ""
+  customModelData: 0
+  thirstPoints: 10.0
+  color:
+    r: 0
+    g: 0
+    b: 255
+  effects: []

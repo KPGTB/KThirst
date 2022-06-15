@@ -1,7 +1,7 @@
 package io.github.kpgtb.kkthirst.manager;
 
 import io.github.kpgtb.kkthirst.KKthirst;
-import io.github.kpgtb.kkthirst.User;
+import io.github.kpgtb.kkthirst.object.User;
 import io.github.kpgtb.kkui.KKui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -70,11 +70,17 @@ public class UserManager {
                 }
 
                 Player player = Bukkit.getPlayer(user.getUuid());
+
+                if(player == null) {
+                    user.setDamaging(false);
+                    cancel();
+                }
+
                 double playerHP = player.getHealth();
 
                 if(playerHP - hpPerSecond <= 0) {
                     player.setHealth(0.0);
-                    user.setThirst(plugin.getConfig().getDouble("maxThirst"));
+                    user.setThirst(user.getMaxThirst());
                     user.save();
                     user.setDamaging(false);
                     cancel();

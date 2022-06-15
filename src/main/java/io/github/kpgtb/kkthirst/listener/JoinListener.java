@@ -2,8 +2,8 @@ package io.github.kpgtb.kkthirst.listener;
 
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkcore.manager.UsefulObjects;
-import io.github.kpgtb.kkthirst.ThirstUsefulObjects;
-import io.github.kpgtb.kkthirst.User;
+import io.github.kpgtb.kkthirst.object.ThirstUsefulObjects;
+import io.github.kpgtb.kkthirst.object.User;
 import io.github.kpgtb.kkthirst.manager.UserManager;
 import io.github.kpgtb.kkui.KKui;
 import org.bukkit.Bukkit;

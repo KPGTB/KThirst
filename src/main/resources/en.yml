@@ -1,0 +1,6 @@
+drinkNotFound: "&cThis drink does not exists!"
+getDrinkFromCommand: "&eYou get drink!"
+# No PAPI
+drinkExists: "&cThis drink exists!"
+createdDrink: "&aCreated drink! To customize use /edit_drink"
+notCreatedDrink: "&cError while creating drink!"

@@ -3,9 +3,13 @@ package io.github.kpgtb.kkthirst;
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkcore.manager.DataType;
 import io.github.kpgtb.kkcore.manager.LanguageManager;
+import io.github.kpgtb.kkcore.manager.command.CommandManager;
 import io.github.kpgtb.kkcore.manager.listener.ListenerManager;
 import io.github.kpgtb.kkcore.util.MessageUtil;
+import io.github.kpgtb.kkthirst.manager.DrinkManager;
 import io.github.kpgtb.kkthirst.manager.UserManager;
+import io.github.kpgtb.kkthirst.object.ThirstUsefulObjects;
+import io.github.kpgtb.kkthirst.object.User;
 import io.github.kpgtb.kkui.ui.FontWidth;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -14,12 +18,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 //TODO:
 // Machines
 // Drinks
+// LanguageMan -> register translates from KKcore to all KK plugins
+// DataMan -> Delete, Add
 
 public final class KKthirst extends JavaPlugin {
 
     private MessageUtil messageUtil;
     private DataManager dataManager;
     private UserManager userManager;
+    private DrinkManager drinkManager;
 
     @Override
     public void onEnable() {
@@ -69,12 +76,17 @@ public final class KKthirst extends JavaPlugin {
 
         userManager = new UserManager(this);
 
+        drinkManager = new DrinkManager(messageUtil,dataManager,getConfig());
+        drinkManager.registerDefaultDrinks();
+        drinkManager.registerDrinksFromDB();
+
         ThirstUsefulObjects thirstUsefulObjects = new ThirstUsefulObjects(
                 messageUtil,
                 languageManager,
                 dataManager,
                 getConfig(),
-                userManager
+                userManager,
+                drinkManager
         );
 
         ListenerManager listenerManager = new ListenerManager(
@@ -84,6 +96,12 @@ public final class KKthirst extends JavaPlugin {
         );
         listenerManager.registerListeners("io.github.kpgtb.kkthirst.listener");
 
+        CommandManager commandManager = new CommandManager(
+                getFile(),
+                "KKthirst",
+                thirstUsefulObjects
+        );
+        commandManager.registerCommands("io.github.kpgtb.kkthirst.command");
     }
 
     @Override
@@ -94,5 +112,9 @@ public final class KKthirst extends JavaPlugin {
             user.save();
         }
         dataManager.closeConnection();
+    }
+
+    public DrinkManager getDrinkManager() {
+        return drinkManager;
     }
 }
