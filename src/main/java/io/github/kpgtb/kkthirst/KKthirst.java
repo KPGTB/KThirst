@@ -17,9 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 //TODO:
 // Machines
-// Drinks
-// LanguageMan -> register translates from KKcore to all KK plugins
-// DataMan -> Delete, Add
 
 public final class KKthirst extends JavaPlugin {
 

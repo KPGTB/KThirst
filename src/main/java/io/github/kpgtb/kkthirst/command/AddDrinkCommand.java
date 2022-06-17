@@ -34,17 +34,20 @@ public class AddDrinkCommand extends KKcommand {
     @Override
     public void executeCommand(CommandSender sender, String[] args) {
         String codeName = args[0];
-        if(drinkManager.getDrinksName().contains(codeName)) {
+        if(drinkManager.getDrinksName().contains(codeName) ||
+                codeName.equalsIgnoreCase("cleanWater") ||
+                codeName.equalsIgnoreCase("dirtyWater")) {
             sender.sendMessage(
                     languageManager.getMessage("drinkExists")
             );
         }
 
-        boolean created = dataManager.set("drinks", codeName, "id", codeName);
+        boolean created = dataManager.add("drinks", codeName);
         if(created) {
             sender.sendMessage(
                     languageManager.getMessage("createdDrink")
             );
+            drinkManager.registerDrink(codeName);
         } else {
             sender.sendMessage(
                     languageManager.getMessage("notCreatedDrink")

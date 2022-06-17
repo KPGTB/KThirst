@@ -47,25 +47,35 @@ public class DrinkManager {
             return;
         }
 
-        double thirstPoints = (double) dataManager.get("drinks", drinkCodeName, "thirstPoints");
-        String drinkName = messageUtil.color((String) dataManager.get("drinks", drinkCodeName, "drinkName")) ;
-        String drinkLoreRaw = (String) dataManager.get("drinks", drinkCodeName, "drinkLore");
-        String drinkColorRaw  = (String) dataManager.get("drinks", drinkCodeName, "drinkColor");
-        int drinkCustomDataModel = (int) dataManager.get("drinks", drinkCodeName, "drinkCMD");
-        String drinkEffectsRaw = (String) dataManager.get("drinks", drinkCodeName, "drinkEffects");
+        Object thirstPointsRaw = dataManager.get("drinks", drinkCodeName, "thirstPoints");
+        Object drinkName = dataManager.get("drinks", drinkCodeName, "drinkName");
+        Object drinkLoreRaw = dataManager.get("drinks", drinkCodeName, "drinkLore");
+        Object drinkColorRaw  = dataManager.get("drinks", drinkCodeName, "drinkColor");
+        Object drinkCustomDataModelRaw = dataManager.get("drinks", drinkCodeName, "drinkCMD");
+        Object drinkEffectsRaw = dataManager.get("drinks", drinkCodeName, "drinkEffects");
+
+        if(thirstPointsRaw == null) thirstPointsRaw = 0.0;
+        if(drinkName == null) drinkName = "";
+        if(drinkLoreRaw == null) drinkLoreRaw = "";
+        if(drinkColorRaw == null) drinkColorRaw = "0, 0, 0";
+        if(drinkCustomDataModelRaw == null) drinkCustomDataModelRaw = 0;
+        if(drinkEffectsRaw == null) drinkEffectsRaw = "";
+
+        double thirstPoints = (double) thirstPointsRaw;
+        int drinkCustomDataModel = (int) drinkCustomDataModelRaw;
 
         ArrayList<String> drinkLore = new ArrayList<>();
-        if(!drinkLoreRaw.isEmpty()) {
-            String[] loreLines = drinkLoreRaw.split("\n");
+        if(!((String)drinkLoreRaw).isEmpty()) {
+            String[] loreLines = ((String)drinkLoreRaw).split("\n");
             for(String line : loreLines) {
                 drinkLore.add(messageUtil.color(line));
             }
         }
 
         Color drinkColor = Color.fromRGB(0,0,0);
-        if(!drinkColorRaw.isEmpty()) {
+        if(!((String)drinkColorRaw).isEmpty()) {
             try {
-                String[] colors = drinkColorRaw.split(", ");
+                String[] colors = ((String)drinkColorRaw).split(", ");
                 int r = Integer.parseInt(colors[0]);
                 int g = Integer.parseInt(colors[1]);
                 int b = Integer.parseInt(colors[2]);
@@ -77,8 +87,8 @@ public class DrinkManager {
         }
 
         ArrayList<PotionEffect> drinkEffects = new ArrayList<>();
-        if(!drinkEffectsRaw.isEmpty()) {
-            String[] effectsLines = drinkEffectsRaw.split(", ");
+        if(!((String)drinkEffectsRaw).isEmpty()) {
+            String[] effectsLines = ((String)drinkEffectsRaw).split(", ");
             for(String effectLine : effectsLines) {
                 try {
                     String[] effectRaw = effectLine.split(" ");
@@ -94,7 +104,7 @@ public class DrinkManager {
             }
         }
 
-        Drink drink = new Drink(drinkCodeName, thirstPoints,drinkName,drinkLore,drinkColor,drinkCustomDataModel,drinkEffects);
+        Drink drink = new Drink(drinkCodeName, thirstPoints,messageUtil.color((String) drinkName),drinkLore,drinkColor,drinkCustomDataModel,drinkEffects);
         drinks.put(drinkCodeName, drink);
     }
     public void registerCustomDrink(Drink drink) {
@@ -175,5 +185,9 @@ public class DrinkManager {
 
         unregisterDrink(codeName);
         registerDrink(codeName);
+    }
+
+    public ArrayList<String> getCustomDrinksNames() {
+        return customDrinksNames;
     }
 }

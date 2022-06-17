@@ -43,7 +43,7 @@ public class UserManager {
                     user.setThirst(userThirst - thirstPerMinute);
                 }
             }
-        }.runTaskTimer(plugin, 15 * 20, 15 * 20);
+        }.runTaskTimer(plugin, 60 * 20, 60 * 20);
 
         BukkitTask autoSaver = new BukkitRunnable() {
             @Override

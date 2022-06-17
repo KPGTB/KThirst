@@ -70,4 +70,20 @@ public class Drink {
     public ItemStack getFinalDrink() {
         return finalDrink;
     }
+
+    public String getDrinkName() {
+        return drinkName;
+    }
+
+    public ArrayList<String> getDrinkLore() {
+        return drinkLore;
+    }
+
+    public Color getDrinkColor() {
+        return drinkColor;
+    }
+
+    public int getDrinkCustomModelData() {
+        return drinkCustomModelData;
+    }
 }
