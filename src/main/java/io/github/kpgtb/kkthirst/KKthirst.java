@@ -17,6 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 //TODO:
 // Machines
+// CMD version
+// No res request 1.13.2
 
 public final class KKthirst extends JavaPlugin {
 

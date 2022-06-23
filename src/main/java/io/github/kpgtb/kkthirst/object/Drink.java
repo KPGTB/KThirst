@@ -41,7 +41,8 @@ public class Drink {
         ItemMeta drinkMeta = finalDrink.getItemMeta();
 
         if(drinkCustomModelData != 0) {
-            drinkMeta.setCustomModelData(drinkCustomModelData);
+            // ? +
+            //drinkMeta.setCustomModelData(drinkCustomModelData);
         }
         drinkMeta.setDisplayName(drinkName);
         drinkMeta.setLore(drinkLore);
