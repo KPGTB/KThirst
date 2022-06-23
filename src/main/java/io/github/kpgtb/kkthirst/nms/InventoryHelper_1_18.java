@@ -26,12 +26,12 @@ public class InventoryHelper_1_18 implements IInventoryHelper{
         Object type = activeContainer.getClass()
                 .getMethod("a")
                 .invoke(activeContainer);
-        Object chatMessage = getNMSClass("ChatMessage")
+        Object chatMessage = getNMClass("network.chat.ChatMessage")
                 .getDeclaredConstructor(String.class, Object[].class)
                 .newInstance(title, new Object[0]);
 
-        Object packet = getNMSClass("PacketPlayOutOpenWindow")
-                .getDeclaredConstructor(int.class, getNMSClass("Containers"), getNMSClass("IChatBaseComponent"))
+        Object packet = getNMClass("network.protocol.game.PacketPlayOutOpenWindow")
+                .getDeclaredConstructor(int.class, getNMClass("world.inventory.Containers"), getNMClass("network.chat.IChatBaseComponent"))
                 .newInstance(windowId, type, chatMessage);
         sendPacket(entityPlayer, packet);
 
@@ -45,7 +45,7 @@ public class InventoryHelper_1_18 implements IInventoryHelper{
                 .getField("b")
                 .get(entityPlayer);
         playerConnection.getClass()
-                .getMethod("a", getNMSClass("Packet"))
+                .getMethod("a", getNMClass("network.protocol.Packet"))
                 .invoke(playerConnection, packet);
     }
 
@@ -58,7 +58,7 @@ public class InventoryHelper_1_18 implements IInventoryHelper{
         return Class.forName("org.bukkit.craftbukkit."+getVersion()+"."+name);
     }
 
-    private Class<?> getNMSClass(String name) throws ClassNotFoundException {
-        return Class.forName("net.minecraft.server."+getVersion()+"."+name);
+    private Class<?> getNMClass(String name) throws ClassNotFoundException {
+        return Class.forName("net.minecraft."+name);
     }
 }
