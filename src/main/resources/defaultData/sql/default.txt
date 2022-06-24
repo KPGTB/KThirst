@@ -1,3 +1,4 @@
 CREATE TABLE IF NOT EXISTS `kkthirst_users` (`id` TEXT NOT NULL, `thirst` DOUBLE NOT NULL DEFAULT 20.0)
 CREATE TABLE IF NOT EXISTS `kkthirst_drinks` (`id` TEXT NOT NULL, `thirstPoints` DOUBLE NOT NULL DEFAULT 0.0, `drinkName` TEXT NOT NULL DEFAULT "", `drinkLore` TEXT NOT NULL DEFAULT "", `drinkColor` TEXT NOT NULL DEFAULT "0, 0, 0", `drinkCMD` INT NOT NULL DEFAULT 0, `drinkEffects` TEXT NOT NULL DEFAULT "")
+CREATE TABLE IF NOT EXISTS `kkthirst_machines` (`id` TEXT NOT NULL, `machineType` TEXT NOT NULL DEFAULT '', `ingredients` TEXT NOT NULL DEFAULT '', `results` TEXT NOT NULL DEFAULT '', `actualRecipeName` TEXT NOT NULL DEFAULT '', `progressTime` INT NOT NULL DEFAULT '0')
 =VALUES=

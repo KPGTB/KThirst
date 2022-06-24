@@ -42,6 +42,10 @@ public class TestMachineCommand extends KKcommand {
                             newName.append("\uF902\uF801");
                         }
                         try {
+                            if(!inv.getViewers().contains(player)) {
+                                cancel();
+                                return;
+                            }
                             new InventoryHelper_1_18().updateInventoryTitle(player, newName.toString());
                         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                                  IllegalAccessException | NoSuchFieldException | InstantiationException e) {
