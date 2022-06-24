@@ -20,7 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 // CMD version
 // No res request 1.13.2
 // Points in water
-// License to all UI and this
+// License to all UI and Thirst
 
 public final class KKthirst extends JavaPlugin {
 
