@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 // Machines
 // CMD version
 // No res request 1.13.2
+// Points in water
 
 public final class KKthirst extends JavaPlugin {
 
