@@ -7,11 +7,17 @@ import io.github.kpgtb.kkcore.manager.command.CommandManager;
 import io.github.kpgtb.kkcore.manager.listener.ListenerManager;
 import io.github.kpgtb.kkcore.util.MessageUtil;
 import io.github.kpgtb.kkthirst.manager.DrinkManager;
+import io.github.kpgtb.kkthirst.manager.MachineManager;
 import io.github.kpgtb.kkthirst.manager.UserManager;
+import io.github.kpgtb.kkthirst.object.BaseMachine;
+import io.github.kpgtb.kkthirst.object.MachineRecipe;
 import io.github.kpgtb.kkthirst.object.ThirstUsefulObjects;
 import io.github.kpgtb.kkthirst.object.User;
 import io.github.kpgtb.kkui.ui.FontWidth;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,6 +34,8 @@ public final class KKthirst extends JavaPlugin {
     private DataManager dataManager;
     private UserManager userManager;
     private DrinkManager drinkManager;
+    private MachineManager machineManager;
+
 
     @Override
     public void onEnable() {
@@ -81,13 +89,45 @@ public final class KKthirst extends JavaPlugin {
         drinkManager.registerDefaultDrinks();
         drinkManager.registerDrinksFromDB();
 
+        machineManager = new MachineManager(dataManager,messageUtil);
+
+        ItemStack filterMachineItemStack = new ItemStack(Material.CAULDRON);
+        ItemMeta filterMachineMeta = filterMachineItemStack.getItemMeta();
+        filterMachineMeta.setDisplayName("&cFilter Machine");
+        filterMachineItemStack.setItemMeta(filterMachineMeta);
+
+        BaseMachine filterMachine = machineManager.registerMachine(
+                "filterMachine",
+                "\uF808§f\uF901\uF80C\uF80A\uF808§rFilter machine§f",
+                27,
+                new int[]{12},
+                new int[]{14},
+                '\uF901',
+                "\uF902\uF801",
+                9,
+                filterMachineItemStack,
+                true
+        );
+
+        filterMachine.registerRecipe(
+                "dirty2cleanWater",
+                new MachineRecipe(
+                        "dirty2cleanWater",
+                        new ItemStack[]{drinkManager.getDrink("dirtyWater").getFinalDrink()},
+                        new ItemStack[]{drinkManager.getDrink("cleanWater").getFinalDrink()},
+                        100)
+        );
+
+        machineManager.loadPlacedMachines();
+
         ThirstUsefulObjects thirstUsefulObjects = new ThirstUsefulObjects(
                 messageUtil,
                 languageManager,
                 dataManager,
                 getConfig(),
                 userManager,
-                drinkManager
+                drinkManager,
+                machineManager
         );
 
         ListenerManager listenerManager = new ListenerManager(
@@ -117,5 +157,9 @@ public final class KKthirst extends JavaPlugin {
 
     public DrinkManager getDrinkManager() {
         return drinkManager;
+    }
+
+    public MachineManager getMachineManager() {
+        return machineManager;
     }
 }

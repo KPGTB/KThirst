@@ -1,5 +1,7 @@
 drinkNotFound: "&cThis drink does not exists!"
 getDrinkFromCommand: "&eYou get drink!"
+machineNotFound: "&cThis machine does not exists!"
+getMachineFromCommand: "&eYou get machine!"
 # No PAPI
 drinkExists: "&cThis drink exists!"
 createdDrink: "&aCreated drink! To customize use /edit_drink"

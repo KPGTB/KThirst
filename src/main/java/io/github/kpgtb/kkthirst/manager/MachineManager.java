@@ -11,14 +11,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-
-//TODO:
-// placeMachine - add save
-// saveMachine
-//
+import java.util.Set;
 
 public class MachineManager {
     private final HashMap<String, BaseMachine> machines;
@@ -55,6 +52,15 @@ public class MachineManager {
     public BaseMachine getMachine(String machineType) {
         return machines.get(machineType);
     }
+    public BaseMachine getMachineFromItemStack(ItemStack itemStack) {
+        for(BaseMachine machine : machines.values()) {
+            if(itemStack.isSimilar(machine.getMachineItemStack())) {
+                return machine;
+            }
+        }
+        return null;
+    }
+    public Set<String> getMachinesName() {return machines.keySet();}
 
     public void loadPlacedMachines() {
         for(Object key : dataManager.getKeys("machines")) {
@@ -84,7 +90,7 @@ public class MachineManager {
             }
 
             String ingredientsRawString = (String) dataManager.get("machines", key, "ingredients");
-            String[] ingredientsRaw = ingredientsRawString.split("<new_ingradient>");
+            String[] ingredientsRaw = ingredientsRawString.split("<new_ingredient>");
 
             ItemStack[] ingredients = new ItemStack[machine.getIngredientSlots().length];
             Gson gson = new Gson();
@@ -93,7 +99,9 @@ public class MachineManager {
             for(String ingredientRaw : ingredientsRaw) {
                 if(ingredientRaw.equalsIgnoreCase("<empty>")) {
                     ingredients[ingredientsI] = null;
-                } else {
+                } else if(ingredientRaw.isEmpty()) {
+                    continue;
+                }else {
                     ItemStack ingredient = gson.fromJson(ingredientRaw, ItemStack.class);
                     ingredients[ingredientsI] = ingredient;
                 }
@@ -107,9 +115,11 @@ public class MachineManager {
             int resultsI = 0;
 
             for(String resultRaw : resultsRaw) {
-                if(resultRaw.equalsIgnoreCase("<empty>")) {
+                if(resultRaw.equalsIgnoreCase("<empty>") ) {
                     results[resultsI] = null;
-                } else {
+                } else if(resultRaw.isEmpty()){
+                    continue;
+                }else {
                     ItemStack result = gson.fromJson(resultRaw, ItemStack.class);
                     results[resultsI] = result;
                 }
@@ -124,11 +134,24 @@ public class MachineManager {
             int inventorySize = machine.getInventorySize();
             String inventoryTitle = machine.getInventoryTitle();
 
-            PlacedMachine placedMachine = new PlacedMachine(location,type,Bukkit.createInventory(null,inventorySize,inventoryTitle),ingredients,results,actualRecipe,progressTime,progressBarLength);
+            Inventory inventory = Bukkit.createInventory(null,inventorySize,inventoryTitle);
+            for (int i = 0; i < ingredients.length; i++) {
+                if(ingredients[i] != null) {
+                    inventory.setItem(machine.getIngredientSlots()[i], ingredients[i]);
+                }
+            }
+            for (int i = 0; i < results.length; i++) {
+                if(results[i] != null) {
+                    inventory.setItem(machine.getResultSlots()[i], results[i]);
+                }
+            }
+
+            PlacedMachine placedMachine = new PlacedMachine(location,type,inventory,ingredients,results,actualRecipe,progressTime,progressBarLength);
             placedMachines.put(location,placedMachine);
 
         } catch (Exception e) {
             messageUtil.sendErrorToConsole("Error while loading machine with location " + key);
+            e.printStackTrace();
         }
     }
     public boolean placeMachine(String machineType, Location location) {
@@ -151,7 +174,7 @@ public class MachineManager {
         if(placedMachines.containsKey(location)) {
             placedMachines.remove(location);
         }
-        //savePlacedMachine
+        saveMachine(placedMachine);
         placedMachines.put(location, placedMachine);
         return true;
     }
@@ -166,4 +189,55 @@ public class MachineManager {
         dataManager.delete("machines", locationRaw);
         return true;
     }
+    public boolean saveMachine(PlacedMachine machine) {
+        try {
+            Location location = machine.getLocation();
+            String key = location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ() + ", " + location.getWorld().getName();
+
+            dataManager.set("machines", key, "machineType", machine.getType());
+
+            Gson gson = new Gson();
+            StringBuilder ingredientsRaw = new StringBuilder();
+
+            for (ItemStack ingredient : machine.getIngredients()) {
+                String ingredientRaw = gson.toJson(ingredient);
+                if(ingredientRaw == null || ingredientRaw.equalsIgnoreCase("null")) {
+                    ingredientRaw = "<empty>";
+                }
+                ingredientsRaw.append(ingredientRaw).append("<new_ingredient>");
+            }
+
+            dataManager.set("machines", key, "ingredients", ingredientsRaw.toString());
+
+            StringBuilder resultsRaw = new StringBuilder();
+
+            for (ItemStack result : machine.getResults()) {
+                String resultRaw = gson.toJson(result);
+                if(resultRaw == null || resultRaw.equalsIgnoreCase("null")) {
+                    resultRaw = "<empty>";
+                }
+                resultsRaw.append(resultRaw).append("<new_result>");
+            }
+
+            dataManager.set("machines", key, "results", resultsRaw.toString());
+
+            String actualRecipeName;
+
+            if(machine.getActualRecipe() == null) {
+                actualRecipeName = "";
+            } else {
+                actualRecipeName = machine.getActualRecipe().getRecipeName();
+            }
+
+            dataManager.set("machines", key, "actualRecipeName", actualRecipeName);
+            dataManager.set("machines", key, "progressTime", machine.getProgressTime());
+        }catch (Exception e) {
+            messageUtil.sendErrorToConsole("Error while saving machine " + machine.getLocation().toString());
+            return false;
+        }
+        return true;
+    }
+    public PlacedMachine getPlacedMachine(Location location) {return placedMachines.get(location);}
+
+
 }
