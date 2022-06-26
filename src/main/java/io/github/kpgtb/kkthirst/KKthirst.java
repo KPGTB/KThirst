@@ -1,6 +1,21 @@
+/*
+ * Copyright 2022 KPG-TB
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package io.github.kpgtb.kkthirst;
 
-import com.google.gson.Gson;
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkcore.manager.DataType;
 import io.github.kpgtb.kkcore.manager.LanguageManager;
@@ -14,21 +29,19 @@ import io.github.kpgtb.kkthirst.object.BaseMachine;
 import io.github.kpgtb.kkthirst.object.MachineRecipe;
 import io.github.kpgtb.kkthirst.object.ThirstUsefulObjects;
 import io.github.kpgtb.kkthirst.object.User;
-import io.github.kpgtb.kkthirst.util.ItemStackSaver;
 import io.github.kpgtb.kkui.ui.FontWidth;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-//TODO:
-// CMD version
-// No res request 1.13.2
-// Points in water
-// License to all UI and Thirst
+import java.util.ArrayList;
 
 public final class KKthirst extends JavaPlugin {
 
@@ -93,33 +106,56 @@ public final class KKthirst extends JavaPlugin {
 
         machineManager = new MachineManager(dataManager,messageUtil, this);
 
-        ItemStack filterMachineItemStack = new ItemStack(Material.CAULDRON);
-        ItemMeta filterMachineMeta = filterMachineItemStack.getItemMeta();
-        filterMachineMeta.setDisplayName("&cFilter Machine");
-        filterMachineItemStack.setItemMeta(filterMachineMeta);
+        if(getConfig().getBoolean("registerFilterMachine")) {
+            try {
+                ItemStack filterMachineItemStack = new ItemStack(Material.valueOf(getConfig().getString("filterMachineItem.material").toUpperCase()));
+                ItemMeta filterMachineMeta = filterMachineItemStack.getItemMeta();
+                filterMachineMeta.setDisplayName(messageUtil.color(getConfig().getString("filterMachineItem.name")));
 
-        BaseMachine filterMachine = machineManager.registerMachine(
-                "filterMachine",
-                "\uF808§f\uF901\uF80C\uF80A\uF808§rFilter machine§f\uF825",
-                27,
-                new int[]{12},
-                new int[]{14},
-                '\uF901',
-                "\uF902\uF801",
-                9,
-                filterMachineItemStack,
-                true
-        );
+                ArrayList<String> lore = new ArrayList<>();
+                getConfig().getStringList("filterMachineItem.lore").forEach(line -> {
+                    lore.add(messageUtil.color(line));
+                });
+                filterMachineMeta.setLore(lore);
 
-        if(getConfig().getBoolean("registerDefaultDrinks")) {
-            filterMachine.registerRecipe(
-                    "dirty2cleanWater",
-                    new MachineRecipe(
+                filterMachineItemStack.setItemMeta(filterMachineMeta);
+
+                BaseMachine filterMachine = machineManager.registerMachine(
+                        "filterMachine",
+                        "\uF808§f\uF901\uF80C\uF80A\uF808§rFilter machine§f\uF825",
+                        27,
+                        new int[]{12},
+                        new int[]{14},
+                        '\uF901',
+                        "\uF902\uF801",
+                        9,
+                        filterMachineItemStack,
+                        true
+                );
+
+                if (getConfig().getBoolean("registerDefaultDrinks")) {
+                    filterMachine.registerRecipe(
                             "dirty2cleanWater",
-                            new ItemStack[]{drinkManager.getDrink("dirtyWater").getFinalDrink()},
-                            new ItemStack[]{drinkManager.getDrink("cleanWater").getFinalDrink()},
-                            100)
-            );
+                            new MachineRecipe(
+                                    "dirty2cleanWater",
+                                    new ItemStack[]{drinkManager.getDrink("dirtyWater").getFinalDrink()},
+                                    new ItemStack[]{drinkManager.getDrink("cleanWater").getFinalDrink()},
+                                    100)
+                    );
+                }
+
+                if(getConfig().getBoolean("registerFilterMachineCrafting")) {
+                    ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(this, "filterMachineRecipe"), filterMachineItemStack);
+                    shapedRecipe.shape("iwi", "ifi", "ili");
+                    shapedRecipe.setIngredient('i', Material.IRON_INGOT);
+                    shapedRecipe.setIngredient('f', Material.FLINT_AND_STEEL);
+                    shapedRecipe.setIngredient('l', Material.OAK_LOG);
+                    shapedRecipe.setIngredient('w', new RecipeChoice.ExactChoice(drinkManager.getDrink("dirtyWater").getFinalDrink()));
+                    Bukkit.addRecipe(shapedRecipe);
+                }
+            } catch (Exception e) {
+                messageUtil.sendErrorToConsole("Error while creating filter machine");
+            }
         }
 
         machineManager.loadPlacedMachines();

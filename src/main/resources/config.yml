@@ -4,9 +4,11 @@ hpPerSecond: 1.0
 uiOffset: 15
 saveTimeTicks: 300 # 20tick = 1s
 
+
 # Default drinks data
 # You can add own custom drinks by using command /addDrink
 registerDefaultDrinks: true
+getDirtyWaterFromWaterSource: true
 
 dirtyWater:
   name: "&6Dirty water"
@@ -39,3 +41,19 @@ cleanWater:
     g: 0
     b: 255
   effects: []
+
+# Filter machine
+registerFilterMachine: true
+# Crafting
+# IRON_INGOT | DIRTY_WATER       | IRON_INGOT
+# IRON_INGOT | FLINT_AND_STEAL | IRON_INGOT
+# IRON_INGOT | OAK_LOG             | IRON_INGOT
+registerFilterMachineCrafting: true
+
+filterMachineItem:
+  material: CAULDRON
+  name: "&cFilter machine"
+  lore:
+    - ""
+    - "&cWith this machine you can filter dirty water"
+    - ""

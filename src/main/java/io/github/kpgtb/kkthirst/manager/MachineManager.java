@@ -1,6 +1,21 @@
+/*
+ * Copyright 2022 KPG-TB
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package io.github.kpgtb.kkthirst.manager;
 
-import com.google.gson.Gson;
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkcore.util.MessageUtil;
 import io.github.kpgtb.kkthirst.nms.*;
@@ -101,14 +116,14 @@ public class MachineManager {
             }
 
             if(location.getBlock().getType() != machine.getMachineItemStack().getType()) {
-                location.getBlock().setType(machine.getMachineItemStack().getType());
+                dataManager.delete("machines", locationRaw);
+                return;
             }
 
             String ingredientsRawString = (String) dataManager.get("machines", key, "ingredients");
             String[] ingredientsRaw = ingredientsRawString.split("<new_ingredient>");
 
             ItemStack[] ingredients = new ItemStack[machine.getIngredientSlots().length];
-            Gson gson = new Gson();
             int ingredientsI = 0;
 
             for(String ingredientRaw : ingredientsRaw) {
@@ -212,7 +227,6 @@ public class MachineManager {
 
             dataManager.set("machines", key, "machineType", machine.getType());
 
-            Gson gson = new Gson();
             StringBuilder ingredientsRaw = new StringBuilder();
 
             for (ItemStack ingredient : machine.getIngredients()) {
