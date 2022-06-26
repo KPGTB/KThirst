@@ -1,5 +1,6 @@
 package io.github.kpgtb.kkthirst;
 
+import com.google.gson.Gson;
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkcore.manager.DataType;
 import io.github.kpgtb.kkcore.manager.LanguageManager;
@@ -13,8 +14,10 @@ import io.github.kpgtb.kkthirst.object.BaseMachine;
 import io.github.kpgtb.kkthirst.object.MachineRecipe;
 import io.github.kpgtb.kkthirst.object.ThirstUsefulObjects;
 import io.github.kpgtb.kkthirst.object.User;
+import io.github.kpgtb.kkthirst.util.ItemStackSaver;
 import io.github.kpgtb.kkui.ui.FontWidth;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,7 +25,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 //TODO:
-// Machines
 // CMD version
 // No res request 1.13.2
 // Points in water
@@ -89,7 +91,7 @@ public final class KKthirst extends JavaPlugin {
         drinkManager.registerDefaultDrinks();
         drinkManager.registerDrinksFromDB();
 
-        machineManager = new MachineManager(dataManager,messageUtil);
+        machineManager = new MachineManager(dataManager,messageUtil, this);
 
         ItemStack filterMachineItemStack = new ItemStack(Material.CAULDRON);
         ItemMeta filterMachineMeta = filterMachineItemStack.getItemMeta();
@@ -98,7 +100,7 @@ public final class KKthirst extends JavaPlugin {
 
         BaseMachine filterMachine = machineManager.registerMachine(
                 "filterMachine",
-                "\uF808§f\uF901\uF80C\uF80A\uF808§rFilter machine§f",
+                "\uF808§f\uF901\uF80C\uF80A\uF808§rFilter machine§f\uF825",
                 27,
                 new int[]{12},
                 new int[]{14},
@@ -109,14 +111,16 @@ public final class KKthirst extends JavaPlugin {
                 true
         );
 
-        filterMachine.registerRecipe(
-                "dirty2cleanWater",
-                new MachineRecipe(
-                        "dirty2cleanWater",
-                        new ItemStack[]{drinkManager.getDrink("dirtyWater").getFinalDrink()},
-                        new ItemStack[]{drinkManager.getDrink("cleanWater").getFinalDrink()},
-                        100)
-        );
+        if(getConfig().getBoolean("registerDefaultDrinks")) {
+            filterMachine.registerRecipe(
+                    "dirty2cleanWater",
+                    new MachineRecipe(
+                            "dirty2cleanWater",
+                            new ItemStack[]{drinkManager.getDrink("dirtyWater").getFinalDrink()},
+                            new ItemStack[]{drinkManager.getDrink("cleanWater").getFinalDrink()},
+                            100)
+            );
+        }
 
         machineManager.loadPlacedMachines();
 
@@ -152,6 +156,10 @@ public final class KKthirst extends JavaPlugin {
         for(User user : userManager.getUsers()) {
             user.save();
         }
+
+        for(Location location : machineManager.getMachinesLocation()) {
+            machineManager.saveMachine(machineManager.getPlacedMachine(location));
+        }
         dataManager.closeConnection();
     }
 
@@ -162,4 +170,5 @@ public final class KKthirst extends JavaPlugin {
     public MachineManager getMachineManager() {
         return machineManager;
     }
+
 }

@@ -3,8 +3,10 @@ package io.github.kpgtb.kkthirst.listener;
 import io.github.kpgtb.kkcore.manager.UsefulObjects;
 import io.github.kpgtb.kkthirst.manager.MachineManager;
 import io.github.kpgtb.kkthirst.object.BaseMachine;
+import io.github.kpgtb.kkthirst.object.PlacedMachine;
 import io.github.kpgtb.kkthirst.object.ThirstUsefulObjects;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,6 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -78,7 +81,7 @@ public class InvListener implements Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onClick(InventoryClickEvent event) {
         InventoryView inventoryView = event.getView();
 
@@ -114,11 +117,13 @@ public class InvListener implements Listener {
                 if (!event.isShiftClick()) {
                     if (blockedSlots.contains(slot)) {
                         event.setCancelled(true);
+                        return;
                     }
                     for (int resultSlot : machine.getResultSlots()) {
                         if (slot == resultSlot) {
                             if (event.getCursor() != null && !event.getCursor().getType().equals(Material.AIR)) {
                                 event.setCancelled(true);
+                                return;
                             }
                         }
                     }
@@ -167,6 +172,27 @@ public class InvListener implements Listener {
 
                     event.setCancelled(true);
                 }
+            }
+        }
+    }
+
+    @EventHandler(priority =  EventPriority.HIGHEST)
+    public void onInvUpdate(InventoryClickEvent event) {
+        Inventory inv = event.getInventory();
+        for(Location machineLocation : machineManager.getMachinesLocation()) {
+            PlacedMachine placedMachine = machineManager.getPlacedMachine(machineLocation);
+            Inventory machineInv = placedMachine.getBaseInventory();
+            if(machineInv.equals(inv)) {
+                ItemStack[] newIngredients = new ItemStack[placedMachine.getBaseMachine().getIngredientSlots().length];
+                for (int i = 0; i < newIngredients.length; i++) {
+                    newIngredients[i] = inv.getItem(placedMachine.getBaseMachine().getIngredientSlots()[i]);
+                }
+                ItemStack[] newResults = new ItemStack[placedMachine.getBaseMachine().getResultSlots().length];
+                for (int i = 0; i < newResults.length; i++) {
+                    newResults[i] = inv.getItem(placedMachine.getBaseMachine().getResultSlots()[i]);
+                }
+                placedMachine.setIngredients(newIngredients);
+                placedMachine.setResults(newResults);
             }
         }
     }

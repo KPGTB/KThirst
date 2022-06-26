@@ -3,6 +3,7 @@ package io.github.kpgtb.kkthirst.object;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class BaseMachine {
     private final String type;
@@ -78,4 +79,5 @@ public class BaseMachine {
     public MachineRecipe getRecipe(String recipeName) {
         return recipes.get(recipeName);
     }
+    public Set<String> getRecipesName() {return recipes.keySet();}
 }

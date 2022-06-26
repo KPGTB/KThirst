@@ -3,9 +3,11 @@ package io.github.kpgtb.kkthirst.manager;
 import com.google.gson.Gson;
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkcore.util.MessageUtil;
+import io.github.kpgtb.kkthirst.nms.*;
 import io.github.kpgtb.kkthirst.object.BaseMachine;
 import io.github.kpgtb.kkthirst.object.MachineRecipe;
 import io.github.kpgtb.kkthirst.object.PlacedMachine;
+import io.github.kpgtb.kkthirst.util.ItemStackSaver;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,6 +15,8 @@ import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -23,13 +27,24 @@ public class MachineManager {
 
     private final DataManager dataManager;
     private final MessageUtil messageUtil;
+    private final JavaPlugin plugin;
 
-    public MachineManager(DataManager dataManager, MessageUtil messageUtil) {
+    public MachineManager(DataManager dataManager, MessageUtil messageUtil, JavaPlugin plugin) {
         this.dataManager = dataManager;
         this.messageUtil = messageUtil;
+        this.plugin = plugin;
 
         machines = new HashMap<>();
         placedMachines = new HashMap<>();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for(Location location : getMachinesLocation()) {
+                    saveMachine(getPlacedMachine(location));
+                }
+            }
+        }.runTaskTimerAsynchronously(plugin, plugin.getConfig().getInt("saveTimeTicks"), plugin.getConfig().getInt("saveTimeTicks"));
     }
 
     public BaseMachine registerMachine(String machineType, String inventoryTitle, int inventorySize, int[] ingredientSlots, int[] resultSlots, Character customInventoryChar, String progressBarChars, int progressBarLength, ItemStack machineItemStack, boolean replace) {
@@ -102,7 +117,7 @@ public class MachineManager {
                 } else if(ingredientRaw.isEmpty()) {
                     continue;
                 }else {
-                    ItemStack ingredient = gson.fromJson(ingredientRaw, ItemStack.class);
+                    ItemStack ingredient = new ItemStackSaver().load(ingredientRaw);
                     ingredients[ingredientsI] = ingredient;
                 }
                 ingredientsI++;
@@ -120,7 +135,7 @@ public class MachineManager {
                 } else if(resultRaw.isEmpty()){
                     continue;
                 }else {
-                    ItemStack result = gson.fromJson(resultRaw, ItemStack.class);
+                    ItemStack result = new ItemStackSaver().load(resultRaw);
                     results[resultsI] = result;
                 }
                 resultsI++;
@@ -146,7 +161,7 @@ public class MachineManager {
                 }
             }
 
-            PlacedMachine placedMachine = new PlacedMachine(location,type,inventory,ingredients,results,actualRecipe,progressTime,progressBarLength);
+            PlacedMachine placedMachine = new PlacedMachine(location,type,inventory,ingredients,results,actualRecipe,progressTime,progressBarLength, this);
             placedMachines.put(location,placedMachine);
 
         } catch (Exception e) {
@@ -169,7 +184,8 @@ public class MachineManager {
                 new ItemStack[machine.getResultSlots().length],
                 null,
                 0,
-                machine.getProgressBarLength());
+                machine.getProgressBarLength(),
+                this);
 
         if(placedMachines.containsKey(location)) {
             placedMachines.remove(location);
@@ -200,11 +216,11 @@ public class MachineManager {
             StringBuilder ingredientsRaw = new StringBuilder();
 
             for (ItemStack ingredient : machine.getIngredients()) {
-                String ingredientRaw = gson.toJson(ingredient);
-                if(ingredientRaw == null || ingredientRaw.equalsIgnoreCase("null")) {
-                    ingredientRaw = "<empty>";
+                if(ingredient == null || ingredient.getType().equals(Material.AIR)) {
+                    ingredientsRaw.append("<empty>").append("<new_ingredient>");
+                    continue;
                 }
-                ingredientsRaw.append(ingredientRaw).append("<new_ingredient>");
+                ingredientsRaw.append(new ItemStackSaver().save(ingredient)).append("<new_ingredient>");
             }
 
             dataManager.set("machines", key, "ingredients", ingredientsRaw.toString());
@@ -212,11 +228,11 @@ public class MachineManager {
             StringBuilder resultsRaw = new StringBuilder();
 
             for (ItemStack result : machine.getResults()) {
-                String resultRaw = gson.toJson(result);
-                if(resultRaw == null || resultRaw.equalsIgnoreCase("null")) {
-                    resultRaw = "<empty>";
+                if(result == null || result.getType().equals(Material.AIR)) {
+                    resultsRaw.append("<empty>").append("<new_result>");
+                    continue;
                 }
-                resultsRaw.append(resultRaw).append("<new_result>");
+                resultsRaw.append(new ItemStackSaver().save(result)).append("<new_result>");
             }
 
             dataManager.set("machines", key, "results", resultsRaw.toString());
@@ -233,11 +249,42 @@ public class MachineManager {
             dataManager.set("machines", key, "progressTime", machine.getProgressTime());
         }catch (Exception e) {
             messageUtil.sendErrorToConsole("Error while saving machine " + machine.getLocation().toString());
+            e.printStackTrace();
             return false;
         }
         return true;
     }
     public PlacedMachine getPlacedMachine(Location location) {return placedMachines.get(location);}
+    public Set<Location> getMachinesLocation() {return placedMachines.keySet();}
 
+    public IInventoryHelper getInventoryHelper() {
+        IInventoryHelper result;
+        switch (Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3]) {
+            case "v1_14_R1":
+            case "v1_16_R3":
+            case "v1_16_R2":
+            case "v1_16_R1":
+            case "v1_15_R1":
+                result = new InventoryHelper_1_14_1_16();
+                break;
+            case "v1_17_R1":
+                result = new InventoryHelper_1_17();
+                break;
+            case "v1_18_R1":
+            case "v1_18_R2":
+                result = new InventoryHelper_1_18();
+                break;
+            case "v1_19_R1":
+                result =  new InventoryHelper_1_19();
+                break;
+            default:
+                result =  new InventoryHelper_1_13();
+                break;
+        }
+        return result;
+    }
 
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
 }

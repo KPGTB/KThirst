@@ -52,7 +52,7 @@ public class UserManager {
                     user.save();
                 }
             }
-        }.runTaskTimer(plugin, 5 * 60 * 20, 5 * 60 * 20);
+        }.runTaskTimer(plugin, plugin.getConfig().getInt("saveTimeTicks"), plugin.getConfig().getInt("saveTimeTicks"));
     }
 
     private void damagePlayer(User user, double hpPerSecond) {
