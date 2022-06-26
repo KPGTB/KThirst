@@ -95,9 +95,8 @@ public class InteractEvent implements Listener {
                 }
             }
 
-
             if(event.useInteractedBlock() != Event.Result.DENY) {
-                if(event.getClickedBlock().getType().equals(Material.WATER)) {
+                if(event.getClickedBlock().getRelative(event.getBlockFace()).getType().equals(Material.WATER)) {
                     if(event.getItem() != null && event.getItem().getType().equals(Material.GLASS_BOTTLE)) {
                         if(config.getBoolean("getDirtyWaterFromWaterSource")) {
                             event.setCancelled(true);
