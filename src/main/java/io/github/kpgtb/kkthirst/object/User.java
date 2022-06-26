@@ -31,6 +31,7 @@ public class User {
     private final BaseUI baseUI;
 
     private boolean damaging;
+    private boolean inWater;
 
     public User(UUID uuid, double thirst, double maxThirst, DataManager dataManager, int uiOffset) {
         this.uuid = uuid;
@@ -39,12 +40,13 @@ public class User {
 
         this.dataManager = dataManager;
         this.damaging = false;
+        this.inWater = false;
         baseUI = new BaseUI("", Alignment.LEFT, uiOffset);
 
         setupUI();
     }
 
-    private void setupUI() {
+    public void setupUI() {
         // 1 icon = 2 points
         // icons = 10 = 20 points
 
@@ -57,9 +59,9 @@ public class User {
             emptyIconsInUI -= 1;
         }
 
-        String fullIconChar = "\uA001\uF802";
-        String halfIconChar = "\uA002\uF802";
-        String emptyIconChar = "\uA003\uF802";
+        String fullIconChar = inWater ? "\uA004\uF802" : "\uA001\uF802";
+        String halfIconChar = inWater ? "\uA005\uF802" : "\uA002\uF802";
+        String emptyIconChar = inWater ? "\uA006\uF802" : "\uA003\uF802";
 
         StringBuilder ui = new StringBuilder();
         for(int i = 0; i < emptyIconsInUI; i++) {
@@ -112,5 +114,13 @@ public class User {
 
     public void setDamaging(boolean damaging) {
         this.damaging = damaging;
+    }
+
+    public boolean isInWater() {
+        return inWater;
+    }
+
+    public void setInWater(boolean inWater) {
+        this.inWater = inWater;
     }
 }

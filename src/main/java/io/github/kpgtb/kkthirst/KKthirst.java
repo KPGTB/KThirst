@@ -75,6 +75,9 @@ public final class KKthirst extends JavaPlugin {
         FontWidth.registerCustomChar('\uA001', 9);
         FontWidth.registerCustomChar('\uA002', 9);
         FontWidth.registerCustomChar('\uA003', 9);
+        FontWidth.registerCustomChar('\uA004', 9);
+        FontWidth.registerCustomChar('\uA005', 9);
+        FontWidth.registerCustomChar('\uA006', 9);
 
         LanguageManager languageManager = new LanguageManager(
                 "KKthirst",
