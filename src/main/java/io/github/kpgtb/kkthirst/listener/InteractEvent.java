@@ -51,8 +51,6 @@ public class InteractEvent implements Listener {
 
                     player.openInventory(machine.getBaseInventory());
 
-
-
                     StringBuilder invTitle = new StringBuilder(baseMachine.getInventoryTitle());
 
                     if(machine.getProgress() > 0) {

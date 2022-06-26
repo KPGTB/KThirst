@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 public class PlacedMachine {
     private final Location location;
@@ -144,6 +143,7 @@ public class PlacedMachine {
     public void startRecipe(MachineRecipe recipe) {
         setActualRecipe(recipe);
         if(progressTime == 0) {setProgressTime(recipe.getWorkTime());}
+        setProgress(Math.round((Math.abs(getProgressTime() - recipe.getWorkTime())) / (recipe.getWorkTime() / getProgressBarLength())));
 
         new BukkitRunnable() {
             @Override

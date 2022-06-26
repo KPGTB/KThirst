@@ -35,7 +35,7 @@ public class InvListener implements Listener {
         machineManager = thirstUsefulObjects.getMachineManager();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onDrag(InventoryDragEvent event) {
 
         for(String machineName : machineManager.getMachinesName()) {
@@ -183,16 +183,7 @@ public class InvListener implements Listener {
             PlacedMachine placedMachine = machineManager.getPlacedMachine(machineLocation);
             Inventory machineInv = placedMachine.getBaseInventory();
             if(machineInv.equals(inv)) {
-                ItemStack[] newIngredients = new ItemStack[placedMachine.getBaseMachine().getIngredientSlots().length];
-                for (int i = 0; i < newIngredients.length; i++) {
-                    newIngredients[i] = inv.getItem(placedMachine.getBaseMachine().getIngredientSlots()[i]);
-                }
-                ItemStack[] newResults = new ItemStack[placedMachine.getBaseMachine().getResultSlots().length];
-                for (int i = 0; i < newResults.length; i++) {
-                    newResults[i] = inv.getItem(placedMachine.getBaseMachine().getResultSlots()[i]);
-                }
-                placedMachine.setIngredients(newIngredients);
-                placedMachine.setResults(newResults);
+                machineManager.saveItems(inv, placedMachine);
             }
         }
     }

@@ -284,6 +284,24 @@ public class MachineManager {
         return result;
     }
 
+    public void saveItems(Inventory inv, PlacedMachine placedMachine) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                ItemStack[] newIngredients = new ItemStack[placedMachine.getBaseMachine().getIngredientSlots().length];
+                for (int i = 0; i < newIngredients.length; i++) {
+                    newIngredients[i] = inv.getItem(placedMachine.getBaseMachine().getIngredientSlots()[i]);
+                }
+                ItemStack[] newResults = new ItemStack[placedMachine.getBaseMachine().getResultSlots().length];
+                for (int i = 0; i < newResults.length; i++) {
+                    newResults[i] = inv.getItem(placedMachine.getBaseMachine().getResultSlots()[i]);
+                }
+                placedMachine.setIngredients(newIngredients);
+                placedMachine.setResults(newResults);
+            }
+        }.runTaskLaterAsynchronously(plugin, 10);
+    }
+
     public JavaPlugin getPlugin() {
         return plugin;
     }
