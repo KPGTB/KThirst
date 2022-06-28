@@ -12,7 +12,7 @@ This plugin requires resource pack and Optifine!
 
 ---
 
-# Instalation
+## Instalation
 1. Download [KKcore](https://github.com/KPGTB/KKcore/releases/tag/v1.0). [KKui](https://github.com/KPGTB/KKui/releases/tag/v1.0), [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) and [KKthirst](https://github.com/KPGTB/KKcore/releases/tag/v1.0)
 2. Put plugins into /plugins folder
 3. Start server to generate files
@@ -28,7 +28,7 @@ This plugin requires resource pack and Optifine!
 
 ---
 
-# What this plugin adds?
+## What this plugin adds?
 
 ---
 
@@ -70,7 +70,7 @@ You can create your own drink with commands!
 
 ---
 
-# Maven
+## Maven
 
 ---
 
@@ -91,7 +91,7 @@ You can create your own drink with commands!
 
 ---
 
-# API
+## API
 
 ---
 
@@ -134,7 +134,7 @@ baseMachine.registerRecipe(String recipeName, MachineRecipe recipe);
 
 ---
 
-# License
+## License
 
 ---
 
