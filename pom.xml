@@ -6,7 +6,7 @@
 
     <groupId>io.github.kpgtb</groupId>
     <artifactId>KKthirst</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -81,19 +81,19 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.14.4-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.kpgtb</groupId>
             <artifactId>KKcore</artifactId>
-            <version>main-1bb57c93fc-1</version>
+            <version>v1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.kpgtb</groupId>
             <artifactId>KKui</artifactId>
-            <version>main-b0e24f3b12-1</version>
+            <version>v1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
