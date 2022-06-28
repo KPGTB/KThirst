@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange)
 ![Author](https://img.shields.io/badge/Author-KPG--TB-green)
 
-Spigot plugin for minecraft 1.13.-1.18. This plugin adds thirst, drinks and machines
+Spigot plugin for minecraft 1.13.-1.19. This plugin adds thirst, drinks and machines
 
 ---
 
