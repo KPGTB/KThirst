@@ -12,7 +12,7 @@ This plugin requires resource pack and Optifine!
 
 ---
 
-## Instalation
+# Instalation
 1. Download [KKcore](https://github.com/KPGTB/KKcore/releases/tag/v1.0). [KKui](https://github.com/KPGTB/KKui/releases/tag/v1.0), [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) and [KKthirst](https://github.com/KPGTB/KKcore/releases/tag/v1.0)
 2. Put plugins into /plugins folder
 3. Start server to generate files
@@ -26,11 +26,7 @@ This plugin requires resource pack and Optifine!
 
 ### All players must have this resource pack (auto download) and [Optifine](https://optifine.net/downloads)!
 
----
-
-## What this plugin adds?
-
----
+# What this plugin adds?
 
 ### Thirst
 
@@ -68,11 +64,7 @@ You can create your own drink with commands!
 2. `/edit_drink` -> Edit created drink. Permission: `kkthirst.editdrink`
 3. `/remove_drink` -> Remove created drink. Permission: `kkthirst.removedrink`
 
----
-
-## Maven
-
----
+# Maven
 
 ```xml
 <repository>
@@ -89,11 +81,7 @@ You can create your own drink with commands!
 </dependency>
 ```
 
----
-
-## API
-
----
+# API
 
 ##### Creating new drink (Without save in database):
 ```java
@@ -132,11 +120,7 @@ MachineRecipe machineRecipe = new MachineRecipe(String recipeName, ItemStack[] i
 baseMachine.registerRecipe(String recipeName, MachineRecipe recipe);
 ```
 
----
-
-## License
-
----
+# License
 
 Apache 2.0
 
