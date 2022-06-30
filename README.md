@@ -13,7 +13,7 @@ This plugin requires resource pack and Optifine!
 ---
 
 # Instalation
-1. Download [KKcore](https://github.com/KPGTB/KKcore/releases/tag/v1.0). [KKui](https://github.com/KPGTB/KKui/releases/tag/v1.1), [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) and [KKthirst](https://github.com/KPGTB/KKthirst/releases/tag/v1.0)
+1. Download [KKcore](https://github.com/KPGTB/KKcore/releases/tag/v1.0). [KKui](https://github.com/KPGTB/KKui/releases/tag/v1.1), [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) and [KKthirst](https://github.com/KPGTB/KKthirst/releases/tag/v1.1)
 2. Put plugins into /plugins folder
 3. Start server to generate files
 4. Disable server
