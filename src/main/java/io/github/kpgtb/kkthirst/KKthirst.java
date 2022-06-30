@@ -123,15 +123,21 @@ public final class KKthirst extends JavaPlugin {
 
                 filterMachineItemStack.setItemMeta(filterMachineMeta);
 
+
+                // Inv title = Filter machine
+                // pbOffset + pb - pbOffset - pbSize - 8 + gui image - gui image size + 8 &rTitle
+
                 BaseMachine filterMachine = machineManager.registerMachine(
                         "filterMachine",
-                        "\uF808§f\uF901\uF80C\uF80A\uF808§rFilter machine§f\uF825",
+                        "Filter machine",
                         27,
                         new int[]{12},
                         new int[]{14},
                         '\uF901',
                         "\uF902\uF801",
+                        1,
                         9,
+                        75,
                         filterMachineItemStack,
                         true
                 );

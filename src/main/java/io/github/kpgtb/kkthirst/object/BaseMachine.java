@@ -16,6 +16,8 @@
 
 package io.github.kpgtb.kkthirst.object;
 
+import io.github.kpgtb.kkui.ui.FontWidth;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -31,14 +33,15 @@ public class BaseMachine {
     private final Character customInventoryChar;
     private final String progressBarChars;
     private final int progressBarLength;
+    private final int progressBarCharSize;
+    private final int progressBarOffset;
 
     private final ItemStack machineItemStack;
 
     private final HashMap<String,MachineRecipe> recipes;
 
-    public BaseMachine(String type, String inventoryTitle, int inventorySize, int[] ingredientSlots, int[] resultSlots, Character customInventoryChar, String progressBarChars, int progressBarLength, ItemStack machineItemStack) {
+    public BaseMachine(String type, String inventoryTitle, int inventorySize, int[] ingredientSlots, int[] resultSlots, Character customInventoryChar, String progressBarChars,int progressBarCharSize, int progressBarLength, int progressBarOffset, ItemStack machineItemStack) {
         this.type = type;
-        this.inventoryTitle = inventoryTitle;
         this.inventorySize = inventorySize;
         this.ingredientSlots = ingredientSlots;
         this.resultSlots = resultSlots;
@@ -46,6 +49,10 @@ public class BaseMachine {
         this.progressBarChars = progressBarChars;
         this.progressBarLength = progressBarLength;
         this.machineItemStack = machineItemStack;
+        this.progressBarCharSize = progressBarCharSize;
+        this.progressBarOffset = progressBarOffset;
+
+        this.inventoryTitle = FontWidth.getSpaces(-8) + ChatColor.WHITE +customInventoryChar + FontWidth.getSpaces(-176 + 8) + ChatColor.RESET + inventoryTitle;
 
         recipes = new HashMap<>();
     }
@@ -84,6 +91,14 @@ public class BaseMachine {
 
     public ItemStack getMachineItemStack() {
         return machineItemStack;
+    }
+
+    public int getProgressBarCharSize() {
+        return progressBarCharSize;
+    }
+
+    public int getProgressBarOffset() {
+        return progressBarOffset;
     }
 
     public void registerRecipe(String recipeName, MachineRecipe recipe) {

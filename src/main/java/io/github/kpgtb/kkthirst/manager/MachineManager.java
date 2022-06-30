@@ -62,8 +62,8 @@ public class MachineManager {
         }.runTaskTimerAsynchronously(plugin, plugin.getConfig().getInt("saveTimeTicks"), plugin.getConfig().getInt("saveTimeTicks"));
     }
 
-    public BaseMachine registerMachine(String machineType, String inventoryTitle, int inventorySize, int[] ingredientSlots, int[] resultSlots, Character customInventoryChar, String progressBarChars, int progressBarLength, ItemStack machineItemStack, boolean replace) {
-        BaseMachine baseMachine = new BaseMachine(machineType,inventoryTitle, inventorySize, ingredientSlots, resultSlots,customInventoryChar,progressBarChars, progressBarLength, machineItemStack);
+    public BaseMachine registerMachine(String machineType, String inventoryTitle, int inventorySize, int[] ingredientSlots, int[] resultSlots, Character customInventoryChar, String progressBarChars,int progressBarCharSize, int progressBarLength,int progressBarOffset, ItemStack machineItemStack, boolean replace) {
+        BaseMachine baseMachine = new BaseMachine(machineType,inventoryTitle, inventorySize, ingredientSlots, resultSlots,customInventoryChar,progressBarChars, progressBarCharSize,progressBarLength, progressBarOffset, machineItemStack);
 
         if(machines.containsKey(machineType)) {
             if(replace) {

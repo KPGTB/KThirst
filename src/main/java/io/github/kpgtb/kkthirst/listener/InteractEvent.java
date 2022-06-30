@@ -23,7 +23,9 @@ import io.github.kpgtb.kkthirst.manager.MachineManager;
 import io.github.kpgtb.kkthirst.object.BaseMachine;
 import io.github.kpgtb.kkthirst.object.PlacedMachine;
 import io.github.kpgtb.kkthirst.object.ThirstUsefulObjects;
+import io.github.kpgtb.kkui.ui.FontWidth;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -76,8 +78,11 @@ public class InteractEvent implements Listener {
 
                     if(machine.getProgress() > 0) {
                         for (int i = 0; i < machine.getProgress(); i++) {
-                            invTitle.append(baseMachine.getProgressBarChars());
+                            invTitle.insert(0, baseMachine.getProgressBarChars());
                         }
+                        invTitle.insert(machine.getProgress() * baseMachine.getProgressBarChars().length(), FontWidth.getSpaces(-baseMachine.getProgressBarOffset() - (machine.getProgress() * baseMachine.getProgressBarCharSize())));
+                        invTitle.insert(0, FontWidth.getSpaces(baseMachine.getProgressBarOffset()));
+                        invTitle.insert(0, ChatColor.WHITE);
                     }
 
                     try {

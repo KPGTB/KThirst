@@ -174,7 +174,7 @@ public class InvListener implements Listener {
 
                         if(inventoryView.getItem(ingredientSlot).isSimilar(event.getCurrentItem())) {
                             int ingredientAmount =inventoryView.getItem(ingredientSlot).getAmount();
-                            int howMuch = 64 - ingredientAmount;
+                            int howMuch = event.getCurrentItem().getMaxStackSize() - ingredientAmount;
                             if(currentItemAmount <= howMuch) {
                                 howMuch = currentItemAmount;
                             }

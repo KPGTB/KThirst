@@ -17,6 +17,8 @@
 package io.github.kpgtb.kkthirst.object;
 
 import io.github.kpgtb.kkthirst.manager.MachineManager;
+import io.github.kpgtb.kkui.ui.FontWidth;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -157,8 +159,10 @@ public class PlacedMachine {
     }
 
     public void startRecipe(MachineRecipe recipe) {
+        if(actualRecipe == null) {
+            setProgressTime(recipe.getWorkTime());
+        }
         setActualRecipe(recipe);
-        if(progressTime == 0) {setProgressTime(recipe.getWorkTime());}
         setProgress(Math.round((Math.abs(getProgressTime() - recipe.getWorkTime())) / (recipe.getWorkTime() / getProgressBarLength())));
 
         new BukkitRunnable() {
@@ -204,19 +208,22 @@ public class PlacedMachine {
 
                         checkAvailableRecipe();
                         cancel();
-                    } else {
+                        return;
                     }
-                    return;
                 }
-                setProgressTime(getProgressTime() - 10);
+                int newProgressTime = getProgressTime() - 10;
+                setProgressTime(Math.max(newProgressTime, 0));
                 setProgress(Math.round((Math.abs(getProgressTime() - recipe.getWorkTime())) / (recipe.getWorkTime() / getProgressBarLength())));
 
                 StringBuilder invTitle = new StringBuilder(baseMachine.getInventoryTitle());
 
                 if(getProgress() > 0) {
                     for (int i = 0; i < getProgress(); i++) {
-                        invTitle.append(baseMachine.getProgressBarChars());
+                        invTitle.insert(0, baseMachine.getProgressBarChars());
                     }
+                    invTitle.insert(getProgress() * baseMachine.getProgressBarChars().length(), FontWidth.getSpaces(-baseMachine.getProgressBarOffset() - (getProgress() * baseMachine.getProgressBarCharSize())));
+                    invTitle.insert(0, FontWidth.getSpaces(baseMachine.getProgressBarOffset()));
+                    invTitle.insert(0, ChatColor.WHITE);
                 }
 
                 for(HumanEntity viewer : baseInventory.getViewers()) {

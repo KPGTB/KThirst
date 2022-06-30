@@ -13,12 +13,12 @@ This plugin requires resource pack and Optifine!
 ---
 
 # Instalation
-1. Download [KKcore](https://github.com/KPGTB/KKcore/releases/tag/v1.0). [KKui](https://github.com/KPGTB/KKui/releases/tag/v1.0), [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) and [KKthirst](https://github.com/KPGTB/KKthirst/releases/tag/v1.0)
+1. Download [KKcore](https://github.com/KPGTB/KKcore/releases/tag/v1.0). [KKui](https://github.com/KPGTB/KKui/releases/tag/v1.1), [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) and [KKthirst](https://github.com/KPGTB/KKthirst/releases/tag/v1.0)
 2. Put plugins into /plugins folder
 3. Start server to generate files
 4. Disable server
 5. Generate and download [resource pack](https://kpgtb.github.io/KK_resourcepack_generator_website/)
-6. Put resource pack in any file hosting (ex. mediafire) and copy link to donwload
+6. Put resource pack in any file hosting (ex. mediafire) and copy link to download
 7. Open /plugins/KKui/config.yml and paste link to resource pack in section `resourcePack:`
 8. If you want to change saving method, change file /plugins/KKcore/config.yml
 9. If you want to translate plugins, open /plugins/KKcore/config.yml and read instructions
@@ -99,16 +99,18 @@ You must add custom char with image to resource pack!
 Example (Filter Machine):
 ```java
 BaseMachine filterMachine = machineManager.registerMachine(
-        "filterMachine",
-        "\uF808§f\uF901\uF80C\uF80A\uF808§rFilter machine§f\uF825",
-        27,
-        new int[]{12},
-        new int[]{14},
-        '\uF901',
-        "\uF902\uF801",
-        9,
-        filterMachineItemStack,
-        true
+    "filterMachine",
+    "Filter machine",
+    27,
+    new int[]{12},
+    new int[]{14},
+    '\uF901',
+    "\uF902\uF801",
+    1,
+    9,
+    75,
+    filterMachineItemStack,
+    true
 );
 ```
 
