@@ -48,13 +48,9 @@ public class AirChangeListener implements Listener {
                 return;
             }
 
-            if(event.getAmount() != player.getMaximumAir()) {
-                user.setInWater(true);
-                user.setupUI();
-            } else {
-                user.setInWater(false);
-                user.setupUI();
-            }
+            boolean inWater = event.getAmount() != player.getMaximumAir();
+            user.setInWater(inWater);
+            user.setupUI();
         }
     }
 }
