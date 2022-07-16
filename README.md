@@ -24,7 +24,7 @@ This plugin requires resource pack and Optifine!
 9. If you want to translate plugins, open /plugins/KKcore/config.yml and read instructions
 10. Start server
 
-### All players must have this resource pack (auto download) and [Optifine](https://optifine.net/downloads)!
+### All players must have this resource pack (auto download)!
 
 # What this plugin adds?
 
