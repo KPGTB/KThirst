@@ -8,7 +8,7 @@ Spigot plugin for minecraft 1.13.-1.19. This plugin adds thirst, drinks and mach
 
 ---
 
-This plugin requires resource pack and Optifine!
+This plugin requires resource pack!
 
 ---
 
