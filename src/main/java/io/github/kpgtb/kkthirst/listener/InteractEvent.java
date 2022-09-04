@@ -37,6 +37,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class InteractEvent implements Listener {
     private final DrinkManager drinkManager;
@@ -99,11 +100,27 @@ public class InteractEvent implements Listener {
                     break;
                 }
             }
+        }
+    }
 
-            if(event.useInteractedBlock() != Event.Result.DENY) {
-                if(event.getClickedBlock().getRelative(event.getBlockFace()).getType().equals(Material.WATER)) {
-                    if(event.getItem() != null && event.getItem().getType().equals(Material.GLASS_BOTTLE)) {
-                        if(config.getBoolean("getDirtyWaterFromWaterSource")) {
+    @EventHandler
+    public void onClick(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Action action = event.getAction();
+
+        if(event.useItemInHand() != Event.Result.DENY) {
+            if(action.equals(Action.RIGHT_CLICK_BLOCK) || action.equals(Action.RIGHT_CLICK_AIR)) {
+                AtomicBoolean isWater = new AtomicBoolean(false);
+
+                player.getLineOfSight(null, 9).forEach(block -> {
+                    if(block.getType().equals(Material.WATER)) {
+                        isWater.set(true);
+                    }
+                });
+
+                if(isWater.get()) {
+                    if (event.getItem() != null && event.getItem().getType().equals(Material.GLASS_BOTTLE)) {
+                        if (config.getBoolean("getDirtyWaterFromWaterSource")) {
                             event.setCancelled(true);
                             event.getItem().setAmount(event.getItem().getAmount() - 1);
                             player.getInventory().addItem(drinkManager.getDrink("dirtyWater").getFinalDrink());

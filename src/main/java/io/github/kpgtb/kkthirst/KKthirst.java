@@ -37,9 +37,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 
@@ -151,6 +155,21 @@ public final class KKthirst extends JavaPlugin {
                                     new ItemStack[]{drinkManager.getDrink("cleanWater").getFinalDrink()},
                                     100)
                     );
+                    ItemStack waterBottle = new ItemStack(Material.POTION, 1);
+                    PotionMeta potionMeta = (PotionMeta) waterBottle.getItemMeta();
+                    potionMeta.setBasePotionData(new PotionData(PotionType.WATER));
+                    waterBottle.setItemMeta(potionMeta);
+                    
+                    ShapelessRecipe shapelessRecipe = new ShapelessRecipe(
+                            new NamespacedKey(this, "dirtyToClassicWater"),
+                            waterBottle
+                    );
+                    shapelessRecipe.addIngredient(
+                            new RecipeChoice.ExactChoice(
+                                    drinkManager.getDrink("dirtyWater").getFinalDrink()
+                            )
+                    );
+                    Bukkit.addRecipe(shapelessRecipe);
                 }
 
                 if(getConfig().getBoolean("registerFilterMachineCrafting")) {
@@ -176,7 +195,8 @@ public final class KKthirst extends JavaPlugin {
                 getConfig(),
                 userManager,
                 drinkManager,
-                machineManager
+                machineManager,
+                this
         );
 
         ListenerManager listenerManager = new ListenerManager(

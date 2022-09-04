@@ -19,6 +19,10 @@ package io.github.kpgtb.kkthirst.object;
 import io.github.kpgtb.kkcore.manager.DataManager;
 import io.github.kpgtb.kkui.ui.Alignment;
 import io.github.kpgtb.kkui.ui.BaseUI;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -41,6 +45,7 @@ public class User {
         this.dataManager = dataManager;
         this.damaging = false;
         this.inWater = false;
+
         baseUI = new BaseUI("", Alignment.LEFT, uiOffset);
 
         setupUI();
@@ -49,6 +54,18 @@ public class User {
     public void setupUI() {
         // 1 icon = 2 points
         // icons = 10 = 20 points
+
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+        if(!op.isOnline() || op.getPlayer() == null) {
+            return;
+        }
+        Player player = op.getPlayer();
+        GameMode gameMode = player.getGameMode();
+
+        if(gameMode.equals(GameMode.CREATIVE) || gameMode.equals(GameMode.SPECTATOR)) {
+            baseUI.update("");
+            return;
+        }
 
         double fullIcon = maxThirst / 10.0;
         int fullIconsInUI = (int) Math.floor(thirst / fullIcon);
@@ -123,4 +140,5 @@ public class User {
     public void setInWater(boolean inWater) {
         this.inWater = inWater;
     }
+
 }

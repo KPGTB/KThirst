@@ -20,6 +20,8 @@ import io.github.kpgtb.kkthirst.KKthirst;
 import io.github.kpgtb.kkthirst.object.User;
 import io.github.kpgtb.kkui.KKui;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -42,10 +44,16 @@ public class UserManager {
             @Override
             public void run() {
                 for(User user : users.values()) {
-                    if(!Bukkit.getOfflinePlayer(user.getUuid()).isOnline()) {
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(user.getUuid());
+                    if(!op.isOnline()) {
                         user.save();
                         KKui.getUiManager().removeUI(user.getUuid(), user.getBaseUI());
                         users.remove(user.getUuid());
+                        continue;
+                    }
+
+                    GameMode gm = op.getPlayer().getGameMode();
+                    if(gm.equals(GameMode.CREATIVE) || gm.equals(GameMode.SPECTATOR)) {
                         continue;
                     }
 
@@ -80,14 +88,22 @@ public class UserManager {
                     cancel();
                 }
 
-                if(!Bukkit.getOfflinePlayer(user.getUuid()).isOnline()) {
+                OfflinePlayer op = Bukkit.getOfflinePlayer(user.getUuid());
+
+                if(!op.isOnline()) {
                     user.setDamaging(false);
                     cancel();
                 }
 
-                Player player = Bukkit.getPlayer(user.getUuid());
+                Player player = op.getPlayer();
 
                 if(player == null) {
+                    user.setDamaging(false);
+                    cancel();
+                }
+
+                GameMode gm = player.getGameMode();
+                if(gm.equals(GameMode.CREATIVE) || gm.equals(GameMode.SPECTATOR)) {
                     user.setDamaging(false);
                     cancel();
                 }

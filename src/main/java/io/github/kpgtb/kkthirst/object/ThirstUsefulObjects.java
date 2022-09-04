@@ -24,17 +24,20 @@ import io.github.kpgtb.kkthirst.manager.DrinkManager;
 import io.github.kpgtb.kkthirst.manager.MachineManager;
 import io.github.kpgtb.kkthirst.manager.UserManager;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class ThirstUsefulObjects extends UsefulObjects {
     private final UserManager userManager;
     private final DrinkManager drinkManager;
     private final MachineManager machineManager;
+    private final JavaPlugin plugin;
 
-    public ThirstUsefulObjects(MessageUtil messageUtil, LanguageManager languageManager, DataManager dataManager, FileConfiguration config, UserManager userManager, DrinkManager drinkManager, MachineManager machineManager) {
+    public ThirstUsefulObjects(MessageUtil messageUtil, LanguageManager languageManager, DataManager dataManager, FileConfiguration config, UserManager userManager, DrinkManager drinkManager, MachineManager machineManager, JavaPlugin plugin) {
         super(messageUtil, languageManager, dataManager, config);
         this.userManager = userManager;
         this.drinkManager = drinkManager;
         this.machineManager = machineManager;
+        this.plugin = plugin;
     }
 
     public UserManager getUserManager() {
@@ -47,5 +50,9 @@ public class ThirstUsefulObjects extends UsefulObjects {
 
     public MachineManager getMachineManager() {
         return machineManager;
+    }
+
+    public JavaPlugin getPlugin() {
+        return plugin;
     }
 }
