@@ -64,11 +64,7 @@ public class Drink {
                             .split("-")[0] // ex. 1.17
                             .split("\\.")[1] // ex. 17
             ) > 13) {
-                try {
-                    drinkMeta.getClass().getMethod("setCustomModelData", int.class).invoke(drinkMeta, drinkCustomModelData);
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                }
+                drinkMeta.setCustomModelData(drinkCustomModelData);
             }
         }
         drinkMeta.setDisplayName(drinkName);

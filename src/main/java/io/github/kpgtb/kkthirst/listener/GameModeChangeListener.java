@@ -49,10 +49,10 @@ public class GameModeChangeListener implements Listener {
         Player player = event.getPlayer();
         User user = userManager.getUser(player.getUniqueId());
 
-
         new BukkitRunnable() {
             @Override
             public void run() {
+                if(user == null) return;
                 user.setupUI();
             }
         }.runTaskLaterAsynchronously(plugin, 10);

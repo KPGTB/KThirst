@@ -21,21 +21,20 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class InventoryHelper_1_18 implements IInventoryHelper{
+public class InventoryHelper_1_18_2 implements IInventoryHelper{
     @Override
     public void updateInventoryTitle(Player player, String title) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException, InstantiationException {
         // 1.18
-        /*EntityPlayer ep =null;
-        PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.bW.j,ep.bW.a(), new ChatMessage("Ciekawee"));
-        ep.b.a(packet);
-        ep.bV.b();*/
+        //PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.bV.j,ep.bV.a(), new ChatMessage("Ciekawee"));
+        // ep.b.a(packet);
+        //ep.bV.b();
 
         Object entityPlayer = getCraftBukkitClass("entity.CraftPlayer")
                 .getMethod("getHandle")
                 .invoke(player);
 
         Object activeContainer = entityPlayer.getClass()
-                .getField("bW")
+                .getField("bV")
                 .get(entityPlayer);
         Object windowId = activeContainer.getClass()
                 .getField("j")

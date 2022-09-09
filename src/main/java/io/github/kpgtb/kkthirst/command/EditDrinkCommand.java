@@ -359,6 +359,13 @@ public class EditDrinkCommand extends KKcommand {
                                 int duration = Integer.parseInt(args[4]);
                                 int strength = Integer.parseInt(args[5]) - 1;
 
+                                ArrayList<PotionEffect> toRemove = new ArrayList<>();
+                                potionEffects.forEach(pe -> {
+                                    if(pe.getType().equals(effectType)) {
+                                        toRemove.add(pe);
+                                    }
+                                });
+                                potionEffects.removeAll(toRemove);
                                 potionEffects.add(new PotionEffect(effectType, duration, strength));
                             } catch (Exception e) {
                                 HashMap<String, String> usageReplaces = new HashMap<>();

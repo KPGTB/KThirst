@@ -285,8 +285,10 @@ public class MachineManager {
                 result = new InventoryHelper_1_17();
                 break;
             case "v1_18_R1":
-            case "v1_18_R2":
                 result = new InventoryHelper_1_18();
+                break;
+            case "v1_18_R2":
+                result = new InventoryHelper_1_18_2();
                 break;
             case "v1_19_R1":
                 result =  new InventoryHelper_1_19();

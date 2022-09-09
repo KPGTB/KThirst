@@ -93,7 +93,7 @@ public class InteractEvent implements Listener {
 
                         player.closeInventory();
                         messageUtil.sendErrorToConsole("Error while updating gui title! " + clickedLocation);
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
 
                     event.setCancelled(true);
