@@ -38,9 +38,9 @@ public class InventoryHelper_1_19 implements IInventoryHelper{
         Object type = activeContainer.getClass()
                 .getMethod("a")
                 .invoke(activeContainer);
-        Object chatMessage = getNMClass("network.chat.ChatMessage")
-                .getDeclaredConstructor(String.class, Object[].class)
-                .newInstance(title, new Object[0]);
+        Object chatMessage = getNMClass("network.chat.IChatBaseComponent")
+                .getMethod("a", String.class)
+                .invoke(getNMClass("network.chat.IChatBaseComponent"), title);
 
         Object packet = getNMClass("network.protocol.game.PacketPlayOutOpenWindow")
                 .getDeclaredConstructor(int.class, getNMClass("world.inventory.Containers"), getNMClass("network.chat.IChatBaseComponent"))
