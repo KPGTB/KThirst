@@ -56,8 +56,9 @@ You can create your own drink with commands!
 ### Commands
 
 ##### Getting commands
-1. `/get_drink` -> Get any drink. Permission: `kkthirst.getdrink`
-2. `/get_machine` -> Get any machine. Permission: `kkthirst.getmachine`
+1. `/get_drink` -> Get any drink. Permission: `kkthirst.getdrink`'
+2. `/give_drink` -> Give any drink to player. Permission: `kkthirst.givedrink`
+3. `/get_machine` -> Get any machine. Permission: `kkthirst.getmachine`
 
 ##### Manage commands
 1. `/add_drink` -> Add new drink. Permission: `kkthirst.adddrink`
