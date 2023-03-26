@@ -1,8 +1,0 @@
-name: ${project.artifactId}
-version: ${project.version}
-main: io.github.kpgtb.kkthirst.KKthirst
-depend: [ KKcore, KKui ]
-authors: [ KPG-TB ]
-description: Spigot plugin for minecraft 1.13.-1.18. This plugin adds thirst, drinks and machines
-website: kpgtb.github.io
-api-version: 1.13

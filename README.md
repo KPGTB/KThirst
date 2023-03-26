@@ -12,6 +12,8 @@ This plugin requires resource pack!
 
 ---
 
+# Development version of KKthirst 2.0
+
 # Instalation
 1. Download [KKcore](https://github.com/KPGTB/KKcore/releases/tag/v1.0). [KKui](https://github.com/KPGTB/KKui/releases/tag/v1.1), [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) and [KKthirst](https://github.com/KPGTB/KKthirst/releases/tag/v1.1)
 2. Put plugins into /plugins folder
