@@ -6,7 +6,9 @@ import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.field.types.StringType;
 import org.bukkit.inventory.ItemStack;
+import pl.kpgtb.kkthirst.util.ItemStackSaver;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,11 @@ public class ItemsPersister extends StringType {
         List<String> serializedItems = new ArrayList<>();
         List<ItemStack> items = (List<ItemStack>) javaObject;
         items.forEach(item -> {
-            serializedItems.add(new ItemBuilder(item).toJson());
+            try {
+                serializedItems.add(ItemStackSaver.save(item));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         return new Gson().toJson(serializedItems);
     }
@@ -36,7 +42,11 @@ public class ItemsPersister extends StringType {
     public Object sqlArgToJava(FieldType fieldType, Object sqlArg, int columnPos) throws SQLException {
         List<ItemStack> result = new ArrayList<>();
         new Gson().fromJson((String) sqlArg, List.class).forEach(si -> {
-            result.add(ItemBuilder.fromJson((String) si).build());
+            try {
+                result.add(ItemStackSaver.load((String) si));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         return result;
     }

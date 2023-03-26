@@ -1,4 +1,4 @@
-package pl.kpgtb.kkthirst.utils;
+package pl.kpgtb.kkthirst.util;
 
 import com.github.kpgtb.ktools.manager.language.LanguageManager;
 import com.github.kpgtb.ktools.util.GlobalManagersWrapper;

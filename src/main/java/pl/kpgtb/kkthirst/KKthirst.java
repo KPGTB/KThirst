@@ -7,19 +7,10 @@ import com.github.kpgtb.ktools.manager.language.LanguageManager;
 import com.github.kpgtb.ktools.manager.listener.ListenerManager;
 import com.github.kpgtb.ktools.manager.resourcepack.ResourcepackManager;
 import com.github.kpgtb.ktools.util.GlobalManagersWrapper;
-import com.j256.ormlite.dao.Dao;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import pl.kpgtb.kkthirst.data.DbDrink;
-import pl.kpgtb.kkthirst.data.type.DrinkEffect;
-import pl.kpgtb.kkthirst.utils.ThirstWrapper;
-
-import java.awt.*;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import pl.kpgtb.kkthirst.util.ThirstWrapper;
 
 public final class KKthirst extends JavaPlugin {
 
@@ -70,40 +61,6 @@ public final class KKthirst extends JavaPlugin {
 
         CommandManager command = new CommandManager(wrapper,getFile(), "kkthirst");
         command.registerCommands(String.format(MAIN_PACKAGE, "command"));
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-
-                Dao<DbDrink, String> drinksDAO = data.getDao(DbDrink.class, String.class);
-
-                DbDrink drink = new DbDrink();
-                drink.setCode("test");
-                drink.setColor(new Color(182,162,15));
-                drink.setLore(Arrays.asList("First line", "Second line"));
-                drink.setName("Awesome drink name");
-                drink.setEffects(Arrays.asList(
-                    new DrinkEffect("TEST_EFFECT", 20, 13),
-                    new DrinkEffect("AWESOME_EFFECT", 10, 2)
-                ));
-                drink.setCustomModelData(10);
-
-                DbDrink drink2 = new DbDrink();
-                drink2.setCode("CleanDrink");
-                drink2.setColor(new Color(0,0,0));
-                drink2.setName("Second name");
-                drink2.setLore(new ArrayList<>());
-                drink2.setEffects(new ArrayList<>());
-                drink2.setCustomModelData(0);
-
-                try {
-                    drinksDAO.create(drink);
-                    drinksDAO.create(drink2);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }.runTaskLater(this, 1);
     }
 
     @Override
