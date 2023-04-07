@@ -1,6 +1,6 @@
 name: ${project.artifactId}
 version: '${project.version}'
-main: pl.kpgtb.kkthirst.KKthirst
+main: pl.kpgtb.kthirst.Kthirst
 api-version: 1.14
 website: kpgtb.pl
 author: KPG_TB

@@ -1,4 +1,4 @@
-package pl.kpgtb.kkthirst.data.persister;
+package pl.kpgtb.kthirst.data.persister;
 
 import com.google.gson.Gson;
 import com.j256.ormlite.field.FieldType;
@@ -8,14 +8,14 @@ import com.j256.ormlite.field.types.StringType;
 import java.sql.SQLException;
 import java.util.List;
 
-public class LorePersister extends StringType {
-    private static final LorePersister singleton = new LorePersister();
+public class EffectsPersister extends StringType {
+    private static final EffectsPersister singleton = new EffectsPersister();
 
-    protected LorePersister() {
+    protected EffectsPersister() {
         super(SqlType.STRING, new Class<?>[]{List.class});
     }
 
-    public static LorePersister getSingleton() {
+    public static EffectsPersister getSingleton() {
         return singleton;
     }
 
@@ -26,6 +26,6 @@ public class LorePersister extends StringType {
 
     @Override
     public Object sqlArgToJava(FieldType fieldType, Object sqlArg, int columnPos) throws SQLException {
-        return new Gson().fromJson((String) sqlArg,List.class);
+        return new Gson().fromJson((String) sqlArg, List.class);
     }
 }

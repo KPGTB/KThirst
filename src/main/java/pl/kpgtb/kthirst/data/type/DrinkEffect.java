@@ -1,8 +1,4 @@
-package pl.kpgtb.kkthirst.data.type;
-
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import pl.kpgtb.kkthirst.data.DbDrink;
+package pl.kpgtb.kthirst.data.type;
 
 public class DrinkEffect {
     private String type;

@@ -1,4 +1,4 @@
-package pl.kpgtb.kkthirst.data.persister;
+package pl.kpgtb.kthirst.data.persister;
 
 import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.field.SqlType;

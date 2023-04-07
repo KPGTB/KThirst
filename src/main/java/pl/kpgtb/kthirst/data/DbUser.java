@@ -1,4 +1,4 @@
-package pl.kpgtb.kkthirst.data;
+package pl.kpgtb.kthirst.data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -14,6 +14,11 @@ public class DbUser {
     private double thirst;
 
     public DbUser() {}
+
+    public DbUser(UUID uuid, double thirst) {
+        this.uuid = uuid;
+        this.thirst = thirst;
+    }
 
     public UUID getUuid() {
         return uuid;

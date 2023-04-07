@@ -1,2 +1,32 @@
-message:
-  sth: ""
+command:
+  drinkExists: "<gray>>> <red>Drink with this name exists!"
+  drinkCreated: "<gray>>> <green>Drink has been created!"
+  drinkRemoved: "<gray>>> <green>Drink has been removed!"
+edit_drink:
+  editGuiName: "<orange>Edit <gray>>> <yellow><drink> <gray><< <orange>drink"
+  changeName: "<orange>Change name"
+  changeCustomModelData: "<orange>Change custom model data"
+  drinkLore: "<orange>Current lore"
+  addLoreLine: "<orange>Add lore line"
+  removeLoreLine: "<orange>Remove lore line"
+  changeColorRed: "<red>Change color"
+  changeColorGreen: "<green>Change color"
+  changeColorBlue: "<blue>Change color"
+  effectList: "<orange>Current effects"
+  effectListEntry: "<white><b><name> <amplifier> <duration> ticks"
+  addEffect: "<orange>Add effect"
+  removeEffect: "<orange>Remove effect"
+  applyEdit: "<dark_green>Apply"
+default_drinks:
+  cleanWaterName: "<aqua>Filtered Water Bottle"
+  cleanWaterLore:
+    - ""
+    - "<blue>Clean, filtered water."
+    - "<blue>Drink it when you want!"
+    - ""
+  dirtyWaterName: "<black>Dirty Water Bottle"
+  dirtyWaterLore:
+    - ""
+    - "<orange>Bad, dirty water."
+    - "<orange>Don't drink that!"
+    - ""

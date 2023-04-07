@@ -1,12 +1,11 @@
-package pl.kpgtb.kkthirst.data.persister;
+package pl.kpgtb.kthirst.data.persister;
 
-import com.github.kpgtb.ktools.util.ItemBuilder;
+import com.github.kpgtb.ktools.util.item.ItemUtil;
 import com.google.gson.Gson;
 import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.field.types.StringType;
 import org.bukkit.inventory.ItemStack;
-import pl.kpgtb.kkthirst.util.ItemStackSaver;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,7 +29,7 @@ public class ItemsPersister extends StringType {
         List<ItemStack> items = (List<ItemStack>) javaObject;
         items.forEach(item -> {
             try {
-                serializedItems.add(ItemStackSaver.save(item));
+                serializedItems.add(ItemUtil.serializeItem(item));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -43,8 +42,8 @@ public class ItemsPersister extends StringType {
         List<ItemStack> result = new ArrayList<>();
         new Gson().fromJson((String) sqlArg, List.class).forEach(si -> {
             try {
-                result.add(ItemStackSaver.load((String) si));
-            } catch (IOException e) {
+                result.add(ItemUtil.deserializeItem((String) sqlArg));
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });

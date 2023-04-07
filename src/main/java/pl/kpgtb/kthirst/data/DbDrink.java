@@ -1,11 +1,10 @@
-package pl.kpgtb.kkthirst.data;
+package pl.kpgtb.kthirst.data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import pl.kpgtb.kkthirst.data.persister.ColorPersister;
-import pl.kpgtb.kkthirst.data.persister.EffectsPersister;
-import pl.kpgtb.kkthirst.data.persister.LorePersister;
-import pl.kpgtb.kkthirst.data.type.DrinkEffect;
+import pl.kpgtb.kthirst.data.persister.ColorPersister;
+import pl.kpgtb.kthirst.data.persister.EffectsPersister;
+import pl.kpgtb.kthirst.data.type.DrinkEffect;
 
 import java.awt.*;
 import java.util.List;
@@ -23,7 +22,7 @@ public class DbDrink {
     // ITEM
     @DatabaseField
     private String name;
-    @DatabaseField(persisterClass = LorePersister.class)
+    @DatabaseField
     private List<String> lore;
     @DatabaseField(persisterClass = ColorPersister.class)
     private Color color;
@@ -31,6 +30,16 @@ public class DbDrink {
     private int customModelData;
 
     public DbDrink() {}
+
+    public DbDrink(String code, double points, List<DrinkEffect> effects, String name, List<String> lore, Color color, int customModelData) {
+        this.code = code;
+        this.points = points;
+        this.effects = effects;
+        this.name = name;
+        this.lore = lore;
+        this.color = color;
+        this.customModelData = customModelData;
+    }
 
     public String getCode() {
         return code;

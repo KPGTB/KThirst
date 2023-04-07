@@ -1,9 +1,9 @@
-package pl.kpgtb.kkthirst.data;
+package pl.kpgtb.kthirst.data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.bukkit.inventory.ItemStack;
-import pl.kpgtb.kkthirst.data.persister.ItemsPersister;
+import pl.kpgtb.kthirst.data.persister.ItemsPersister;
 
 import java.util.List;
 
@@ -24,6 +24,15 @@ public class DbMachine {
     private int progressTime;
 
     public DbMachine() {}
+
+    public DbMachine(int id, String type, List<ItemStack> ingredients, List<ItemStack> results, String actualRecipeName, int progressTime) {
+        this.id = id;
+        this.type = type;
+        this.ingredients = ingredients;
+        this.results = results;
+        this.actualRecipeName = actualRecipeName;
+        this.progressTime = progressTime;
+    }
 
     public int getId() {
         return id;
