@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.kpgtb.kthirst.data.DbDrink;
 import pl.kpgtb.kthirst.data.type.DrinkEffect;
+import pl.kpgtb.kthirst.util.MmUtil;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
 import java.awt.*;
@@ -71,7 +72,7 @@ public class DrinkEditGUI {
 
             GuiItem saveItem = new GuiItem(
                     new ItemBuilder(Material.EMERALD)
-                            .displayname("applyEdit")
+                            .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "applyEdit"))
                             .build()
             );
             saveItem.setClickAction(e -> {
@@ -110,14 +111,14 @@ public class DrinkEditGUI {
                 );
                 changeName.setClickAction(e -> {
                     new KWriteGui(wrapper, gui, (Player) e.getWhoClicked(), (text) -> {
-                        newName = text;
+                        newName = MmUtil.parse(text);
                         changeName.setItemBuilder(
-                                changeName.getItemBuilder().lore(newName)
+                                changeName.getItemBuilder().lore(newName,0)
                         );
                         gui.update();
                     }).open();
                 });
-                mainContainer.setItem(2, 1, changeName);
+                mainContainer.setItem(1, 1, changeName);
             } // Name
 
             {
@@ -128,34 +129,34 @@ public class DrinkEditGUI {
                 );
                 changePoints.setClickAction(e -> {
                     new KCountGui(wrapper, gui, (value) -> {
-                        newPoints = (int) value;
+                        newPoints = Math.round(value * 100.0) / 100.0;
                         changePoints.setItemBuilder(
                                 changePoints.getItemBuilder()
                                         .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentPoints", Placeholder.unparsed("value", newPoints+"")))
                         );
                         gui.update();
-                    }, player, newPoints, 0, 1000, false, Material.GLASS_BOTTLE).open();
+                    }, player, newPoints, 0, 1000, true, Material.GLASS_BOTTLE).open();
                 });
-                mainContainer.setItem(2, 2, changePoints);
+                mainContainer.setItem(1, 2, changePoints);
             } // Points
 
             {
                 GuiItem changeCustomModelData = new GuiItem(
                         new ItemBuilder(Material.ITEM_FRAME)
                                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "changeCustomModelData"))
-                                .lore(newCMD + "")
+                                .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentCustomModelData", Placeholder.unparsed("value", newCMD+"")))
                 );
                 changeCustomModelData.setClickAction(e -> {
                     new KCountGui(wrapper, gui, (value) -> {
                         newCMD = (int) value;
                         changeCustomModelData.setItemBuilder(
                                 changeCustomModelData.getItemBuilder()
-                                        .lore(newCMD + "")
+                                        .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentCustomModelData", Placeholder.unparsed("value", newCMD+"")))
                         );
                         gui.update();
                     }, player, drink.getCustomModelData(), 0, 10000, false, Material.ITEM_FRAME).open();
                 });
-                mainContainer.setItem(2, 3, changeCustomModelData);
+                mainContainer.setItem(1, 3, changeCustomModelData);
             } // Custom Model Data
 
             {
@@ -168,12 +169,12 @@ public class DrinkEditGUI {
                         newColor = new Color((int) value, newColor.getGreen(), newColor.getBlue());
                         changeRed.setItemBuilder(
                                 changeRed.getItemBuilder()
-                                        .lore(ChatColor.RED + "" + newColor.getRed())
+                                        .lore(ChatColor.RED + "" + newColor.getRed(),0)
                         );
                         gui.update();
                     }, player, drink.getColor().getRed(), 0, 255, false, Material.RED_DYE).open();
                 });
-                mainContainer.setItem(4, 1, changeRed);
+                mainContainer.setItem(3, 1, changeRed);
             } // R
 
             {
@@ -186,12 +187,12 @@ public class DrinkEditGUI {
                         newColor = new Color(newColor.getRed(), (int) value, newColor.getBlue());
                         changeGreen.setItemBuilder(
                                 changeGreen.getItemBuilder()
-                                        .lore(ChatColor.GREEN + "" + newColor.getGreen())
+                                        .lore(ChatColor.GREEN + "" + newColor.getGreen(),0)
                         );
                         gui.update();
                     }, player, drink.getColor().getGreen(), 0, 255, false, Material.GREEN_DYE).open();
                 });
-                mainContainer.setItem(4, 2, changeGreen);
+                mainContainer.setItem(3, 2, changeGreen);
             } // G
 
             {
@@ -205,13 +206,13 @@ public class DrinkEditGUI {
                         newColor = new Color(newColor.getRed(), newColor.getGreen(), (int) value);
                         changeBlue.setItemBuilder(
                                 changeBlue.getItemBuilder()
-                                        .lore(ChatColor.BLUE + "" + newColor.getBlue())
+                                        .lore(ChatColor.BLUE + "" + newColor.getBlue(),0)
                         );
                         gui.update();
 
                     }, player, drink.getColor().getBlue(), 0, 255, false, Material.BLUE_DYE).open();
                 });
-                mainContainer.setItem(4, 3, changeBlue);
+                mainContainer.setItem(3, 3, changeBlue);
             } // B
 
             {
@@ -220,8 +221,16 @@ public class DrinkEditGUI {
                         .lore(newLore)
                         .build()
                 );
-
-                mainContainer.setItem(6, 1, changeLore);
+                changeLore.setClickAction(e -> {
+                    new LoreEditGUI(wrapper,gui,(lore) -> {
+                        newLore = lore;
+                        changeLore.setItemBuilder(changeLore.getItemBuilder()
+                                .lore(newLore)
+                        );
+                        gui.update();
+                    },player,newLore).open();
+                });
+                mainContainer.setItem(5, 1, changeLore);
             } // Lore
 
             {
@@ -230,12 +239,22 @@ public class DrinkEditGUI {
                         .lore(getEffectsAsEntries())
                         .build()
                 );
-
-                mainContainer.setItem(6, 3, changeEffects);
+                changeEffects.setClickAction(e -> {
+                    new EffectsEditGUI(wrapper,gui,(effects) -> {
+                        newEffects = effects;
+                        changeEffects.setItemBuilder(changeEffects.getItemBuilder()
+                                .lore(getEffectsAsEntries())
+                        );
+                        gui.update();
+                    },player,newEffects).open();
+                });
+                mainContainer.setItem(5, 3, changeEffects);
             } // Effects
 
             gui.addContainer(mainContainer);
         } // Main Container
+
+        gui.open(player);
     }
 
     private List<String> getEffectsAsEntries() {

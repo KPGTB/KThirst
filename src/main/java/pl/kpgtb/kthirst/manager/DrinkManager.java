@@ -4,6 +4,7 @@ import com.github.kpgtb.ktools.manager.item.builder.KitemBuilder;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -39,7 +40,6 @@ public class DrinkManager {
 
     public void createDrink(DbDrink drink) {
         reloadDrink(drink);
-        drinks.put(drink.getCode(), drink);
     }
     public void removeDrink(DbDrink drink) {
         wrapper.getItemManager().unregisterItem("kthirst:"+drink.getCode());
@@ -47,6 +47,7 @@ public class DrinkManager {
     }
     public void reloadDrink(DbDrink drink) {
         removeDrink(drink);
+        drinks.put(drink.getCode(), drink);
         KitemBuilder builder = new KitemBuilder(wrapper, "kthirst", drink.getCode(), prepareDrinkItem(drink));
         builder.setOnConsumeAction(e -> handleDrink(drink,e.getPlayer()));
         builder.register();
@@ -58,6 +59,7 @@ public class DrinkManager {
         meta.setLore(drink.getLore());
         meta.setDisplayName(drink.getName());
         meta.setCustomModelData(drink.getCustomModelData());
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         PotionMeta potion = (PotionMeta) meta;
         potion.setColor(Color.fromRGB(drink.getColor().getRed(), drink.getColor().getGreen(), drink.getColor().getBlue()));
         item.setItemMeta(potion);

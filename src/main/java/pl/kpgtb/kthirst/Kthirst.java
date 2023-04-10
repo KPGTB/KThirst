@@ -53,6 +53,9 @@ public final class Kthirst extends JavaPlugin {
         language.saveDefaultLanguage("lang/en.yml", this);
         language.refreshMessages();
 
+        DataManager data = apiManagers.getDataManager();
+        data.registerTables(packageUtil.get("data"), getFile());
+
         DrinkManager drinkManager = new DrinkManager();
         ThirstWrapper wrapper = new ThirstWrapper(apiManagers,language,this,adventure, drinkManager);
         drinkManager.setWrapper(wrapper);
@@ -74,9 +77,6 @@ public final class Kthirst extends JavaPlugin {
         resourcePack.registerCustomChar("kthirst", "\uA006", "waterempty", getResource("resourcepack/waterempty.png"),9,-5,9);
         resourcePack.registerCustomChar("kthirst", "\uF901", "thirstmachinemenu", getResource("resourcepack/thirstmachinemenu.png"),71,13,176);
         resourcePack.registerCustomChar("kthirst", "\uF902", "thirstmachineprogress", getResource("resourcepack/thirstmachineprogress.png"),4,-29,1);
-
-        DataManager data = wrapper.getDataManager();
-        data.registerTables(packageUtil.get("data"), getFile());
 
         ListenerManager listener = new ListenerManager(wrapper, getFile());
         listener.registerListeners(packageUtil.get("listener"));
