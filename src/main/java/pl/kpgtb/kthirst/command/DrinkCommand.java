@@ -18,7 +18,7 @@ import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@Description(text = "Manage drinks on server")
+@Description("Manage drinks on server")
 public class DrinkCommand extends KCommand {
     private final ThirstWrapper wrapper;
 
@@ -28,7 +28,7 @@ public class DrinkCommand extends KCommand {
     }
 
 
-    @Description(text = "Create new drink")
+    @Description("Create new drink")
     public void create(CommandSender sender, @Filter(andFilters = {DrinkNotExistsFilter.class}) String name) throws SQLException {
         Dao<DbDrink, String> drinksDAO = wrapper.getDataManager().getDao(DbDrink.class, String.class);
 
@@ -49,12 +49,12 @@ public class DrinkCommand extends KCommand {
         wrapper.getLanguageManager().getComponent(LanguageLevel.PLUGIN, "drinkCreated").forEach(audience::sendMessage);
     }
 
-    @Description(text = "Edit drink")
+    @Description("Edit drink")
     public void edit(Player player, DbDrink drink) {
         new DrinkEditGUI(wrapper,drink,player).open();
     }
 
-    @Description(text = "Remove drink")
+    @Description("Remove drink")
     public void remove(CommandSender sender, DbDrink drink) throws SQLException {
         Dao<DbDrink, String> drinksDAO = wrapper.getDataManager().getDao(DbDrink.class, String.class);
         drinksDAO.delete(drink);

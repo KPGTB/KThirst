@@ -14,7 +14,6 @@ import com.github.kpgtb.ktools.util.wrapper.GlobalManagersWrapper;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.kpgtb.kthirst.data.DbDrink;
 import pl.kpgtb.kthirst.data.type.DrinkEffect;

@@ -38,13 +38,15 @@ public class DrinkManager {
     }
 
     public void createDrink(DbDrink drink) {
-        drinks.put(drink.getCode(), drink);
         reloadDrink(drink);
+        drinks.put(drink.getCode(), drink);
     }
     public void removeDrink(DbDrink drink) {
+        wrapper.getItemManager().unregisterItem("kthirst:"+drink.getCode());
         drinks.remove(drink.getCode());
     }
     public void reloadDrink(DbDrink drink) {
+        removeDrink(drink);
         KitemBuilder builder = new KitemBuilder(wrapper, "kthirst", drink.getCode(), prepareDrinkItem(drink));
         builder.setOnConsumeAction(e -> handleDrink(drink,e.getPlayer()));
         builder.register();
