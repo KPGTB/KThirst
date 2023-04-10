@@ -1,4 +1,4 @@
-package pl.kpgtb.kthirst.manager;
+package pl.kpgtb.kthirst.manager.drink;
 
 import com.github.kpgtb.ktools.manager.item.builder.KitemBuilder;
 import org.bukkit.Color;
@@ -8,7 +8,11 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import pl.kpgtb.kthirst.data.DbDrink;
+import pl.kpgtb.kthirst.data.type.DrinkEffect;
+import pl.kpgtb.kthirst.manager.user.ThirstUser;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
 import java.sql.SQLException;
@@ -66,7 +70,18 @@ public class DrinkManager {
         return item;
     }
     private void handleDrink(DbDrink drink, Player player) {
-
+        ThirstUser user = wrapper.getUserManager().getUser(player.getUniqueId());
+        if(user == null) {
+            return;
+        }
+        user.setThirst(user.getThirst() + drink.getPoints());
+        for(DrinkEffect effect : drink.getEffects()) {
+            player.addPotionEffect(new PotionEffect(
+                    PotionEffectType.getByName(effect.getType()),
+                    effect.getDuration(),
+                    effect.getAmplifier()
+            ));
+        }
     }
 
     public HashMap<String, DbDrink> getDrinks() {
