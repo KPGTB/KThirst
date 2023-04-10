@@ -1,11 +1,16 @@
 package pl.kpgtb.kthirst.data.persister;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.field.types.StringType;
+import pl.kpgtb.kthirst.data.type.DrinkEffect;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EffectsPersister extends StringType {
@@ -26,6 +31,14 @@ public class EffectsPersister extends StringType {
 
     @Override
     public Object sqlArgToJava(FieldType fieldType, Object sqlArg, int columnPos) throws SQLException {
-        return new Gson().fromJson((String) sqlArg, List.class);
+        Gson gson = new Gson();
+        List<DrinkEffect> result = new ArrayList<>();
+        JsonElement json = new JsonParser().parse((String) sqlArg);
+        for(JsonElement el : json.getAsJsonArray()) {
+            result.add(
+                    gson.fromJson(el, DrinkEffect.class)
+            );
+        }
+        return result;
     }
 }
