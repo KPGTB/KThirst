@@ -187,10 +187,12 @@ public class MachineManager {
             Location location = machine.getLocation();
 
             Optional<DbMachine> dbMachineOptional = machinesDAO.queryForEq("location", location).stream().findFirst();
-            if(!dbMachineOptional.isPresent()) {
-                return false;
+            DbMachine dbMachine = new DbMachine();
+            boolean newMachine = true;
+            if(dbMachineOptional.isPresent()) {
+                dbMachine = dbMachineOptional.get();
+                newMachine = false;
             }
-            DbMachine dbMachine = dbMachineOptional.get();
 
             dbMachine.setType(machine.getType());
             dbMachine.setIngredients(Arrays.asList(machine.getIngredients()));
@@ -205,6 +207,12 @@ public class MachineManager {
 
             dbMachine.setActualRecipeName(actualRecipeName);
             dbMachine.setProgressTime(machine.getProgressTime());
+
+            if(newMachine) {
+                machinesDAO.create(dbMachine);
+            } else {
+                machinesDAO.update(dbMachine);
+            }
 
         }catch (Exception e) {
             e.printStackTrace();
