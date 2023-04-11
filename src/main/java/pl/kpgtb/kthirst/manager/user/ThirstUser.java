@@ -1,6 +1,7 @@
 package pl.kpgtb.kthirst.manager.user;
 
 import com.github.kpgtb.ktools.manager.data.DataManager;
+import com.github.kpgtb.ktools.manager.language.LanguageManager;
 import com.github.kpgtb.ktools.manager.ui.Alignment;
 import com.github.kpgtb.ktools.manager.ui.BaseUiObject;
 import com.github.kpgtb.ktools.manager.ui.UiManager;
@@ -21,18 +22,20 @@ public class ThirstUser {
 
     private final DataManager dataManager;
     private final UiManager uiManager;
+    private final LanguageManager languageManager;
     private final BaseUiObject baseUI;
 
     private boolean damaging;
     private boolean inWater;
 
-    public ThirstUser(UUID uuid, double thirst, double maxThirst, DataManager dataManager, UiManager uiManager, int uiOffset) {
+    public ThirstUser(UUID uuid, double thirst, double maxThirst, DataManager dataManager, UiManager uiManager, LanguageManager languageManager, int uiOffset) {
         this.uuid = uuid;
         this.thirst = thirst;
         this.maxThirst = maxThirst;
 
         this.dataManager = dataManager;
         this.uiManager = uiManager;
+        this.languageManager = languageManager;
         this.damaging = false;
         this.inWater = false;
 
@@ -83,7 +86,30 @@ public class ThirstUser {
             ui.append(fullIconChar);
         }
 
-        baseUI.update(ui.toString());
+        boolean fixShadow = newerVersionThan(19,1);
+
+        if(fixShadow) {
+            baseUI.update(languageManager.convertMmToString("<color:#4e5c24>" + ui.toString()));
+        } else {
+            baseUI.update(ui.toString());
+        }
+    }
+
+    private boolean newerVersionThan(int minor, int patch) {
+        String[] version = Bukkit.getBukkitVersion()
+                        .split("-")[0]
+                        .split("\\.");
+        int mcMinor = Integer.parseInt(version[1]);
+        int mcPatch = Integer.parseInt(version[2]);
+
+        if(mcMinor > minor) {
+            return true;
+        }
+        if(mcMinor < minor) {
+            return false;
+        }
+
+        return mcPatch >= patch;
     }
 
     public void save() throws SQLException {

@@ -4,10 +4,7 @@ import com.github.kpgtb.ktools.manager.gui.KCountGui;
 import com.github.kpgtb.ktools.manager.gui.KGui;
 import com.github.kpgtb.ktools.manager.gui.KWriteGui;
 import com.github.kpgtb.ktools.manager.gui.container.GuiContainer;
-import com.github.kpgtb.ktools.manager.gui.container.PagedGuiContainer;
 import com.github.kpgtb.ktools.manager.gui.item.GuiItem;
-import com.github.kpgtb.ktools.manager.gui.item.common.LeftItem;
-import com.github.kpgtb.ktools.manager.gui.item.common.RightItem;
 import com.github.kpgtb.ktools.manager.language.LanguageLevel;
 import com.github.kpgtb.ktools.util.item.ItemBuilder;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
@@ -17,11 +14,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.kpgtb.kthirst.data.type.DrinkEffect;
 import pl.kpgtb.kthirst.gui.response.EffectResponse;
-import pl.kpgtb.kthirst.gui.response.LoreResponse;
-import pl.kpgtb.kthirst.util.MmUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EffectCreatorGUI {
     private final ToolsObjectWrapper wrapper;
@@ -73,7 +65,7 @@ public class EffectCreatorGUI {
 
         GuiItem setType = new GuiItem(new ItemBuilder(Material.GLASS_BOTTLE)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "setType"))
-                .lore(MmUtil.parse("<white><b>" + effect.getType()))
+                .lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getType()))
         );
         setType.setClickAction(e -> {
             redirect = true;
@@ -83,7 +75,7 @@ public class EffectCreatorGUI {
                    type = "WRONG";
                }
                effect.setType(type);
-               setType.setItemBuilder(setType.getItemBuilder().lore(MmUtil.parse("<white><b>" + effect.getType()),0));
+               setType.setItemBuilder(setType.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getType()),0));
                gui.update();
             }).open();
         });
@@ -91,13 +83,13 @@ public class EffectCreatorGUI {
 
         GuiItem setAmplifier = new GuiItem(new ItemBuilder(Material.GLOWSTONE_DUST)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "setAmplifier"))
-                .lore(MmUtil.parse("<white><b>" + effect.getAmplifier()))
+                .lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getAmplifier()))
         );
         setAmplifier.setClickAction(e -> {
             redirect = true;
             new KCountGui(wrapper,gui,value -> {
                 effect.setAmplifier((int) value);
-                setAmplifier.setItemBuilder(setAmplifier.getItemBuilder().lore(MmUtil.parse("<white><b>" + effect.getAmplifier()),0));
+                setAmplifier.setItemBuilder(setAmplifier.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getAmplifier()),0));
                 gui.update();
             }, player,effect.getAmplifier(),0,254,false,Material.GLOWSTONE_DUST).open();
         });
@@ -105,13 +97,13 @@ public class EffectCreatorGUI {
 
         GuiItem setDuration = new GuiItem(new ItemBuilder(Material.CLOCK)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "setDuration"))
-                .lore(MmUtil.parse("<white><b>" + effect.getDuration()))
+                .lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getDuration()))
         );
         setDuration.setClickAction(e -> {
             redirect = true;
             new KCountGui(wrapper,gui,value -> {
                 effect.setDuration((int) value);
-                setDuration.setItemBuilder(setDuration.getItemBuilder().lore(MmUtil.parse("<white><b>" + effect.getDuration()),0));
+                setDuration.setItemBuilder(setDuration.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getDuration()),0));
                 gui.update();
             }, player,effect.getDuration(),0,10000000,false,Material.CLOCK).open();
         });

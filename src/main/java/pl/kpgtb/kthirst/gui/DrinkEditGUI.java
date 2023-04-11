@@ -14,7 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import pl.kpgtb.kthirst.data.DbDrink;
 import pl.kpgtb.kthirst.data.type.DrinkEffect;
-import pl.kpgtb.kthirst.util.MmUtil;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
 import java.awt.*;
@@ -111,7 +110,7 @@ public class DrinkEditGUI {
                 );
                 changeName.setClickAction(e -> {
                     new KWriteGui(wrapper, gui, (Player) e.getWhoClicked(), (text) -> {
-                        newName = MmUtil.parse(text);
+                        newName = wrapper.getLanguageManager().convertMmToString(text);
                         changeName.setItemBuilder(
                                 changeName.getItemBuilder().lore(newName,0)
                         );
@@ -129,7 +128,7 @@ public class DrinkEditGUI {
                 );
                 changePoints.setClickAction(e -> {
                     new KCountGui(wrapper, gui, (value) -> {
-                        newPoints = Math.round(value * 100.0) / 100.0;
+                        newPoints = value;
                         changePoints.setItemBuilder(
                                 changePoints.getItemBuilder()
                                         .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentPoints", Placeholder.unparsed("value", newPoints+"")))

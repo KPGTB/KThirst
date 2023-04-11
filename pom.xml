@@ -78,7 +78,7 @@
         <dependency>
             <groupId>com.github.KPGTB</groupId>
             <artifactId>Ktools</artifactId>
-            <version>1.5.0</version>
+            <version>1.5.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

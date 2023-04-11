@@ -14,10 +14,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.kpgtb.kthirst.gui.response.LoreResponse;
-import pl.kpgtb.kthirst.util.MmUtil;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class LoreEditGUI {
@@ -88,7 +86,7 @@ public class LoreEditGUI {
                 if(text.isEmpty()) {
                     return;
                 }
-                newLore.add(MmUtil.parse(text));
+                newLore.add(wrapper.getLanguageManager().convertMmToString(text));
                 generateLoreItems(gui,pagedGuiContainer);
             }).open();
         });
@@ -109,7 +107,7 @@ public class LoreEditGUI {
     }
 
     private void generateLoreItems(KGui gui, PagedGuiContainer pagedGuiContainer) {
-        pages.forEach(pagedGuiContainer::removePage);
+        pagedGuiContainer.clearPages();
         pages.clear();
         pages.add(new GuiContainer(pagedGuiContainer));
 
@@ -126,7 +124,6 @@ public class LoreEditGUI {
             );
             item.setClickAction(e -> {
                 newLore.remove(loreLine);
-                pagedGuiContainer.setPageIdx(0);
                 generateLoreItems(gui,pagedGuiContainer);
             });
             page.setItem(x,0,item);

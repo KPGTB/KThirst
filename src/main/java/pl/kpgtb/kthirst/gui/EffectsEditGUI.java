@@ -108,7 +108,7 @@ public class EffectsEditGUI {
     }
 
     private void generateEffectsItems(KGui gui, PagedGuiContainer pagedGuiContainer) {
-        pages.forEach(pagedGuiContainer::removePage);
+        pagedGuiContainer.clearPages();
         pages.clear();
         pages.add(new GuiContainer(pagedGuiContainer));
 
@@ -133,7 +133,6 @@ public class EffectsEditGUI {
             );
             item.setClickAction(e -> {
                 newEffects.remove(effect);
-                pagedGuiContainer.setPageIdx(0);
                 generateEffectsItems(gui,pagedGuiContainer);
             });
             page.setItem(x,0,item);

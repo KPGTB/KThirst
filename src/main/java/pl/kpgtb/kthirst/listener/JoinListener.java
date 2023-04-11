@@ -39,7 +39,7 @@ public class JoinListener extends Klistener {
         }
 
         double playerThirst = (double) usersDAO.queryForId(uuid).getThirst();
-        ThirstUser user = new ThirstUser(uuid, playerThirst, maxThirst, wrapper.getDataManager(),wrapper.getUiManager(),15);
+        ThirstUser user = new ThirstUser(uuid, playerThirst, maxThirst, wrapper.getDataManager(),wrapper.getUiManager(), wrapper.getLanguageManager(), 15);
         wrapper.getUserManager().addUser(uuid, user);
 
         wrapper.getUiManager().addUI(uuid, user.getBaseUI());
