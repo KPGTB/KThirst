@@ -37,3 +37,9 @@ default_drinks:
     - "<gold>Bad, dirty water."
     - "<gold>Don't drink that!"
     - ""
+default_machines:
+  filterItemName: "<blue>Filter Machine"
+  filterItemLore:
+    - ""
+    - "<dark_blue>Use it to filter water!"
+    - ""

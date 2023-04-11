@@ -2,6 +2,7 @@ package pl.kpgtb.kthirst.data;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import pl.kpgtb.kthirst.data.persister.ItemsPersister;
 
@@ -22,16 +23,27 @@ public class DbMachine {
     private String actualRecipeName;
     @DatabaseField
     private int progressTime;
+    @DatabaseField
+    private Location location;
 
     public DbMachine() {}
 
-    public DbMachine(int id, String type, List<ItemStack> ingredients, List<ItemStack> results, String actualRecipeName, int progressTime) {
+    public DbMachine(int id, String type, List<ItemStack> ingredients, List<ItemStack> results, String actualRecipeName, int progressTime, Location location) {
         this.id = id;
         this.type = type;
         this.ingredients = ingredients;
         this.results = results;
         this.actualRecipeName = actualRecipeName;
         this.progressTime = progressTime;
+        this.location = location;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public int getId() {

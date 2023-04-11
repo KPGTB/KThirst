@@ -3,22 +3,38 @@ package pl.kpgtb.kthirst;
 import com.github.kpgtb.ktools.Ktools;
 import com.github.kpgtb.ktools.manager.command.CommandManager;
 import com.github.kpgtb.ktools.manager.data.DataManager;
+import com.github.kpgtb.ktools.manager.debug.DebugType;
 import com.github.kpgtb.ktools.manager.language.LanguageLevel;
 import com.github.kpgtb.ktools.manager.language.LanguageManager;
 import com.github.kpgtb.ktools.manager.listener.ListenerManager;
+import com.github.kpgtb.ktools.manager.recipe.RecipeManager;
 import com.github.kpgtb.ktools.manager.resourcepack.ResourcepackManager;
 import com.github.kpgtb.ktools.manager.ui.UiManager;
 import com.github.kpgtb.ktools.manager.updater.SpigotUpdater;
 import com.github.kpgtb.ktools.manager.updater.UpdaterManager;
 import com.github.kpgtb.ktools.util.file.PackageUtil;
+import com.github.kpgtb.ktools.util.item.ItemBuilder;
 import com.github.kpgtb.ktools.util.wrapper.GlobalManagersWrapper;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import pl.kpgtb.kthirst.data.DbDrink;
 import pl.kpgtb.kthirst.data.type.DrinkEffect;
 import pl.kpgtb.kthirst.manager.drink.DrinkManager;
+import pl.kpgtb.kthirst.manager.machine.BaseMachine;
+import pl.kpgtb.kthirst.manager.machine.MachineManager;
+import pl.kpgtb.kthirst.manager.machine.MachineRecipe;
 import pl.kpgtb.kthirst.manager.user.UserManager;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
@@ -64,19 +80,62 @@ public final class Kthirst extends JavaPlugin {
         UserManager userManager = new UserManager(this,uiManager);
 
         DrinkManager drinkManager = new DrinkManager();
-        ThirstWrapper wrapper = new ThirstWrapper(apiManagers,language,this,adventure, drinkManager, userManager);
-        drinkManager.setWrapper(wrapper);
-        registerThirstDrinks(drinkManager,language);
-        try {
-            drinkManager.registerServerDrinks();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+
+        MachineManager machineManager = new MachineManager(data,language,this);
+
+        ThirstWrapper wrapper = new ThirstWrapper(apiManagers,language,this,adventure, drinkManager, userManager, machineManager);
+
+        {
+            drinkManager.setWrapper(wrapper);
+            registerThirstDrinks(drinkManager, language);
+            try {
+                drinkManager.registerServerDrinks();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        {
+            machineManager.setWrapper(wrapper);
+            try {
+                ItemStack filterMachineItemStack = new ItemBuilder(Material.CAULDRON)
+                        .displayname(language.getSingleString(LanguageLevel.PLUGIN, "filterItemName"))
+                        .model(153)
+                        .lore(language.getString(LanguageLevel.PLUGIN, "filterItemLore"))
+                        .build();
+
+                BaseMachine filterMachine = machineManager.registerMachine(
+                        "filterMachine",
+                        "Filter machine",
+                        27,
+                        new int[]{12},
+                        new int[]{14},
+                        '\uF901',
+                        "\uF902\uF801",
+                        1,
+                        9,
+                        75,
+                        filterMachineItemStack,
+                        true
+                );
+
+                filterMachine.registerRecipe(
+                        "dirty2cleanWater",
+                        new MachineRecipe(
+                                "dirty2cleanWater",
+                                new ItemStack[]{wrapper.getItemManager().getCustomItem("kthirst", "dirty_water")},
+                                new ItemStack[]{wrapper.getItemManager().getCustomItem("kthirst", "clean_water")},
+                                100)
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         ResourcepackManager resourcePack = wrapper.getResourcepackManager();
-        resourcePack.setRequired(true);
-        resourcePack.registerPlugin("Kthirst", getDescription().getVersion());
         {
+            resourcePack.setRequired(true);
+            resourcePack.registerPlugin("Kthirst", getDescription().getVersion());
             resourcePack.registerCustomChar("kthirst", "\uA001", "waterfull", getResource("resourcepack/waterfull.png"), 9, -16, 9);
             resourcePack.registerCustomChar("kthirst", "\uA002", "waterhalf", getResource("resourcepack/waterhalf.png"), 9, -16, 9);
             resourcePack.registerCustomChar("kthirst", "\uA003", "waterempty", getResource("resourcepack/waterempty.png"), 9, -16, 9);
@@ -93,6 +152,15 @@ public final class Kthirst extends JavaPlugin {
         wrapper.getParamParserManager().registerParsers(packageUtil.get("parser"),getFile());
         CommandManager command = new CommandManager(wrapper,getFile(), "kthirst");
         command.registerCommands(packageUtil.get("command"));
+
+        RecipeManager recipeManager = new RecipeManager(wrapper,getFile(),"kthirst");
+        recipeManager.registerRecipes(packageUtil.get("recipe"));
+
+        if(machineManager.getInventoryHelper() == null) {
+            wrapper.getDebugManager().sendWarning(DebugType.START, "This version is not supported by Kthirst!", true);
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         UpdaterManager updater = new UpdaterManager(getDescription(), new SpigotUpdater("103387"), wrapper.getDebugManager());
         updater.checkUpdate();
