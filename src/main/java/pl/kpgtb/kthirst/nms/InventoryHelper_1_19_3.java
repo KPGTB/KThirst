@@ -30,7 +30,7 @@ public class InventoryHelper_1_19_3 implements IInventoryHelper{
                 .invoke(player);
 
         Object activeContainer = entityPlayer.getClass()
-                .getField("bU")
+                .getField("bP")
                 .get(entityPlayer);
         Object windowId = activeContainer.getClass()
                 .getField("j")
