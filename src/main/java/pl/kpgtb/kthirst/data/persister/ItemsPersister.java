@@ -28,10 +28,14 @@ public class ItemsPersister extends StringType {
         List<String> serializedItems = new ArrayList<>();
         List<ItemStack> items = (List<ItemStack>) javaObject;
         items.forEach(item -> {
-            try {
-                serializedItems.add(ItemUtil.serializeItem(item));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if(item == null) {
+                serializedItems.add("null");
+            } else {
+                try {
+                    serializedItems.add(ItemUtil.serializeItem(item));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         return new Gson().toJson(serializedItems);
@@ -41,10 +45,14 @@ public class ItemsPersister extends StringType {
     public Object sqlArgToJava(FieldType fieldType, Object sqlArg, int columnPos) throws SQLException {
         List<ItemStack> result = new ArrayList<>();
         new Gson().fromJson((String) sqlArg, List.class).forEach(si -> {
-            try {
-                result.add(ItemUtil.deserializeItem((String) sqlArg));
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+            if(si.equals("null")) {
+                result.add(null);
+            } else {
+                try {
+                    result.add(ItemUtil.deserializeItem((String) si));
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         return result;

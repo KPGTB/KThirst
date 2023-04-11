@@ -176,7 +176,6 @@ public class MachineManager {
         placedMachines.get(location).getBaseInventory().getViewers().forEach(HumanEntity::closeInventory);
         location.getBlock().setType(Material.AIR);
         placedMachines.remove(location);
-        String locationRaw = location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ() + ", " + location.getWorld().getName();
         DeleteBuilder<?,?> deleteBuilder = machinesDAO.deleteBuilder();
         deleteBuilder.where().eq("location", location);
         deleteBuilder.delete();
@@ -195,8 +194,9 @@ public class MachineManager {
             }
 
             dbMachine.setType(machine.getType());
+            dbMachine.setLocation(location);
             dbMachine.setIngredients(Arrays.asList(machine.getIngredients()));
-            dbMachine.setIngredients(Arrays.asList(machine.getResults()));
+            dbMachine.setResults(Arrays.asList(machine.getResults()));
             String actualRecipeName;
 
             if(machine.getActualRecipe() == null) {

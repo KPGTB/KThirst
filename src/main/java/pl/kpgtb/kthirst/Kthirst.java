@@ -17,24 +17,18 @@ import com.github.kpgtb.ktools.util.item.ItemBuilder;
 import com.github.kpgtb.ktools.util.wrapper.GlobalManagersWrapper;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import pl.kpgtb.kthirst.data.DbDrink;
 import pl.kpgtb.kthirst.data.type.DrinkEffect;
 import pl.kpgtb.kthirst.manager.drink.DrinkManager;
 import pl.kpgtb.kthirst.manager.machine.BaseMachine;
 import pl.kpgtb.kthirst.manager.machine.MachineManager;
 import pl.kpgtb.kthirst.manager.machine.MachineRecipe;
+import pl.kpgtb.kthirst.manager.user.ThirstUser;
 import pl.kpgtb.kthirst.manager.user.UserManager;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
@@ -46,6 +40,8 @@ import java.util.Arrays;
 public final class Kthirst extends JavaPlugin {
 
     private BukkitAudiences adventure;
+    private UserManager userManager;
+    private MachineManager machineManager;
 
     @Override
     public void onEnable() {
@@ -77,11 +73,11 @@ public final class Kthirst extends JavaPlugin {
         UiManager uiManager = apiManagers.getUiManager();
         uiManager.setRequired(true);
 
-        UserManager userManager = new UserManager(this,uiManager);
+        userManager = new UserManager(this,uiManager);
 
         DrinkManager drinkManager = new DrinkManager();
 
-        MachineManager machineManager = new MachineManager(data,language,this);
+        machineManager = new MachineManager(data,language,this);
 
         ThirstWrapper wrapper = new ThirstWrapper(apiManagers,language,this,adventure, drinkManager, userManager, machineManager);
 
@@ -127,6 +123,8 @@ public final class Kthirst extends JavaPlugin {
                                 new ItemStack[]{wrapper.getItemManager().getCustomItem("kthirst", "clean_water")},
                                 100)
                 );
+
+                machineManager.loadPlacedMachines();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -205,6 +203,22 @@ public final class Kthirst extends JavaPlugin {
     public void onDisable() {
         if(adventure != null) {
             adventure.close();
+        }
+
+        if(userManager != null) {
+            for(ThirstUser user : userManager.getUsers()) {
+                try {
+                    user.save();
+                } catch (SQLException e) {
+                    continue;
+                }
+            }
+        }
+
+        if(machineManager != null) {
+            for(Location location : machineManager.getMachinesLocation()) {
+                machineManager.saveMachine(machineManager.getPlacedMachine(location));
+            }
         }
     }
 }
