@@ -21,7 +21,7 @@ public class FilterMachineRecipe extends Krecipe {
 
     @Override
     public Recipe getRecipe() {
-        ShapedRecipe shapedRecipe = new ShapedRecipe(key, wrapper.getItemManager().getCustomItem("kthirst", "filterMachine"));
+        ShapedRecipe shapedRecipe = new ShapedRecipe(key, wrapper.getItemManager().getCustomItem("kthirst", "filter_machine"));
         shapedRecipe.shape("iwi", "ifi", "ili");
         shapedRecipe.setIngredient('i', Material.IRON_INGOT);
         shapedRecipe.setIngredient('f', Material.FLINT_AND_STEEL);
