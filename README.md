@@ -1,5 +1,5 @@
 # Kthirst - 2.0.0
-[![](https://jitpack.io/v/KPGTB/KKthirst.svg)](https://jitpack.io/#KPGTB/KKthirst)
+[![](https://jitpack.io/v/KPGTB/Kthirst.svg)](https://jitpack.io/#KPGTB/Kthirst)
 ![Spigot](https://img.shields.io/badge/Spigot-1.14--1.19-yellow)
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange)
 ![Author](https://img.shields.io/badge/Author-KPG--TB-green)
