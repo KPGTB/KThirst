@@ -102,7 +102,7 @@ public final class Kthirst extends JavaPlugin {
                         .build();
 
                 BaseMachine filterMachine = machineManager.registerMachine(
-                        "filterMachine",
+                        "filter_machine",
                         "Filter machine",
                         27,
                         new int[]{12},
