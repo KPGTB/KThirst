@@ -30,6 +30,7 @@ import pl.kpgtb.kthirst.manager.machine.MachineManager;
 import pl.kpgtb.kthirst.manager.machine.MachineRecipe;
 import pl.kpgtb.kthirst.manager.user.ThirstUser;
 import pl.kpgtb.kthirst.manager.user.UserManager;
+import pl.kpgtb.kthirst.placeholder.ThirstPlaceholder;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
 import java.awt.*;
@@ -56,7 +57,7 @@ public final class Kthirst extends JavaPlugin {
         adventure = BukkitAudiences.create(this);
         GlobalManagersWrapper apiManagers = api.getGlobalManagersWrapper();
 
-        PackageUtil packageUtil = new PackageUtil("pl.kpgtb.kthirst");
+        PackageUtil packageUtil = new PackageUtil("pl.kpgtb.kthirst", "kthirst");
 
         LanguageManager language = new LanguageManager(
                 getDataFolder(),
@@ -79,7 +80,7 @@ public final class Kthirst extends JavaPlugin {
 
         machineManager = new MachineManager(data,language,this);
 
-        ThirstWrapper wrapper = new ThirstWrapper(apiManagers,language,this,adventure, drinkManager, userManager, machineManager);
+        ThirstWrapper wrapper = new ThirstWrapper(apiManagers,language,this,adventure, packageUtil, drinkManager, userManager, machineManager);
 
         {
             drinkManager.setWrapper(wrapper);
@@ -119,8 +120,8 @@ public final class Kthirst extends JavaPlugin {
                         "dirty2cleanWater",
                         new MachineRecipe(
                                 "dirty2cleanWater",
-                                new ItemStack[]{wrapper.getItemManager().getCustomItem("kthirst", "dirty_water")},
-                                new ItemStack[]{wrapper.getItemManager().getCustomItem("kthirst", "clean_water")},
+                                new ItemStack[]{wrapper.getItemManager().getCustomItem(packageUtil.tag(), "dirty_water")},
+                                new ItemStack[]{wrapper.getItemManager().getCustomItem(packageUtil.tag(), "clean_water")},
                                 100)
                 );
 
@@ -133,31 +134,35 @@ public final class Kthirst extends JavaPlugin {
         ResourcepackManager resourcePack = wrapper.getResourcepackManager();
         {
             resourcePack.setRequired(true);
-            resourcePack.registerPlugin("Kthirst", getDescription().getVersion());
-            resourcePack.registerCustomChar("kthirst", "\uA001", "waterfull", getResource("resourcepack/waterfull.png"), 9, -16, 9);
-            resourcePack.registerCustomChar("kthirst", "\uA002", "waterhalf", getResource("resourcepack/waterhalf.png"), 9, -16, 9);
-            resourcePack.registerCustomChar("kthirst", "\uA003", "waterempty", getResource("resourcepack/waterempty.png"), 9, -16, 9);
-            resourcePack.registerCustomChar("kthirst", "\uA004", "waterfull", getResource("resourcepack/waterfull.png"), 9, -5, 9);
-            resourcePack.registerCustomChar("kthirst", "\uA005", "waterhalf", getResource("resourcepack/waterhalf.png"), 9, -5, 9);
-            resourcePack.registerCustomChar("kthirst", "\uA006", "waterempty", getResource("resourcepack/waterempty.png"), 9, -5, 9);
-            resourcePack.registerCustomChar("kthirst", "\uF901", "thirstmachinemenu", getResource("resourcepack/thirstmachinemenu.png"), 71, 13, 176);
-            resourcePack.registerCustomChar("kthirst", "\uF902", "thirstmachineprogress", getResource("resourcepack/thirstmachineprogress.png"), 4, -29, 1);
+            resourcePack.registerPlugin(packageUtil.tag(), getDescription().getVersion());
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA001", "waterfull", getResource("resourcepack/waterfull.png"), 9, -16, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA002", "waterhalf", getResource("resourcepack/waterhalf.png"), 9, -16, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA003", "waterempty", getResource("resourcepack/waterempty.png"), 9, -16, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA004", "waterfull", getResource("resourcepack/waterfull.png"), 9, -5, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA005", "waterhalf", getResource("resourcepack/waterhalf.png"), 9, -5, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA006", "waterempty", getResource("resourcepack/waterempty.png"), 9, -5, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uF901", "thirstmachinemenu", getResource("resourcepack/thirstmachinemenu.png"), 71, 13, 176);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uF902", "thirstmachineprogress", getResource("resourcepack/thirstmachineprogress.png"), 4, -29, 1);
         }
 
         ListenerManager listener = new ListenerManager(wrapper, getFile());
         listener.registerListeners(packageUtil.get("listener"));
 
         wrapper.getParamParserManager().registerParsers(packageUtil.get("parser"),getFile());
-        CommandManager command = new CommandManager(wrapper,getFile(), "kthirst");
+        CommandManager command = new CommandManager(wrapper,getFile(), packageUtil.tag());
         command.registerCommands(packageUtil.get("command"));
 
-        RecipeManager recipeManager = new RecipeManager(wrapper,getFile(),"kthirst");
+        RecipeManager recipeManager = new RecipeManager(wrapper,getFile(),packageUtil.tag());
         recipeManager.registerRecipes(packageUtil.get("recipe"));
 
         if(machineManager.getInventoryHelper() == null) {
             wrapper.getDebugManager().sendWarning(DebugType.START, "This version is not supported by Kthirst!", true);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
+        }
+
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new ThirstPlaceholder(userManager,data).register();
         }
 
         UpdaterManager updater = new UpdaterManager(getDescription(), new SpigotUpdater("103387"), wrapper.getDebugManager());

@@ -5,6 +5,7 @@ import com.github.kpgtb.ktools.manager.language.LanguageManager;
 import com.github.kpgtb.ktools.manager.ui.Alignment;
 import com.github.kpgtb.ktools.manager.ui.BaseUiObject;
 import com.github.kpgtb.ktools.manager.ui.UiManager;
+import com.github.kpgtb.ktools.util.ui.NoShadow;
 import com.j256.ormlite.dao.Dao;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -86,30 +87,7 @@ public class ThirstUser {
             ui.append(fullIconChar);
         }
 
-        boolean fixShadow = newerVersionThan(19,1);
-
-        if(fixShadow) {
-            baseUI.update(languageManager.convertMmToString("<color:#4e5c24>" + ui.toString()));
-        } else {
-            baseUI.update(ui.toString());
-        }
-    }
-
-    private boolean newerVersionThan(int minor, int patch) {
-        String[] version = Bukkit.getBukkitVersion()
-                        .split("-")[0]
-                        .split("\\.");
-        int mcMinor = Integer.parseInt(version[1]);
-        int mcPatch = Integer.parseInt(version[2]);
-
-        if(mcMinor > minor) {
-            return true;
-        }
-        if(mcMinor < minor) {
-            return false;
-        }
-
-        return mcPatch >= patch;
+        baseUI.update(NoShadow.disableShadow(ui.toString(), languageManager));
     }
 
     public void save() throws SQLException {
