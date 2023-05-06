@@ -1,4 +1,4 @@
-# Kthirst - ALPHA 2.0.0
+# Kthirst - 2.0.0
 [![](https://jitpack.io/v/KPGTB/KKthirst.svg)](https://jitpack.io/#KPGTB/KKthirst)
 ![Spigot](https://img.shields.io/badge/Spigot-1.14--1.19-yellow)
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange)
@@ -6,11 +6,6 @@
 
 Spigot plugin for minecraft 1.14.-1.19. This plugin adds thirst, drinks and machines
 
----
-
-This plugin requires resource pack!
-
----
 # Instalation
 
 Download and put to ./plugins/ these plugins:
