@@ -1,4 +1,4 @@
-# Kthirst - 2.0.0
+# Kthirst
 [![](https://jitpack.io/v/KPGTB/Kthirst.svg)](https://jitpack.io/#KPGTB/Kthirst)
 ![Spigot](https://img.shields.io/badge/Spigot-1.14--1.19-yellow)
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange)
@@ -9,8 +9,8 @@ Spigot plugin for minecraft 1.14.-1.19. This plugin adds thirst, drinks and mach
 # Instalation
 
 Download and put to ./plugins/ these plugins:
-- [Kthirst 2.0.0](https://github.com/KPGTB/KKthirst/releases)
-- [Ktools 1.6.1](https://github.com/KPGTB/Ktools/releases/tag/1.5.3)
+- [Kthirst](https://github.com/KPGTB/KKthirst/releases)
+- [Ktools](https://github.com/KPGTB/Ktools/releases)
 - [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
 
 # What this plugin adds?

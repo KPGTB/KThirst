@@ -12,6 +12,7 @@ import com.github.kpgtb.ktools.manager.resourcepack.ResourcepackManager;
 import com.github.kpgtb.ktools.manager.ui.UiManager;
 import com.github.kpgtb.ktools.manager.updater.SpigotUpdater;
 import com.github.kpgtb.ktools.manager.updater.UpdaterManager;
+import com.github.kpgtb.ktools.util.bstats.Metrics;
 import com.github.kpgtb.ktools.util.file.PackageUtil;
 import com.github.kpgtb.ktools.util.item.ItemBuilder;
 import com.github.kpgtb.ktools.util.wrapper.GlobalManagersWrapper;
@@ -167,6 +168,8 @@ public final class Kthirst extends JavaPlugin {
 
         UpdaterManager updater = new UpdaterManager(getDescription(), new SpigotUpdater("103387"), wrapper.getDebugManager());
         updater.checkUpdate();
+
+        Metrics metrics = new Metrics(this,18407);
     }
 
     private void registerThirstDrinks(DrinkManager drinkManager, LanguageManager language) {
