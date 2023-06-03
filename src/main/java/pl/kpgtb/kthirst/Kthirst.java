@@ -16,6 +16,7 @@ import com.github.kpgtb.ktools.util.bstats.Metrics;
 import com.github.kpgtb.ktools.util.file.PackageUtil;
 import com.github.kpgtb.ktools.util.item.ItemBuilder;
 import com.github.kpgtb.ktools.util.wrapper.GlobalManagersWrapper;
+import com.github.kpgtb.ktools.util.wrapper.ToolsInitializer;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -49,30 +50,17 @@ public final class Kthirst extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
-        Ktools api = (Ktools) Bukkit.getPluginManager().getPlugin("Ktools");
-        if(api == null) {
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        ToolsInitializer initializer = new ToolsInitializer(this)
+                .prepareLanguage(getConfig().getString("lang"), "en");
 
-        adventure = BukkitAudiences.create(this);
-        GlobalManagersWrapper apiManagers = api.getGlobalManagersWrapper();
+        adventure = initializer.getAdventure();
+        PackageUtil packageUtil = initializer.getPackageUtil();
+        LanguageManager language = initializer.getLanguageManager();
 
-        PackageUtil packageUtil = new PackageUtil("pl.kpgtb.kthirst", "kthirst");
-
-        LanguageManager language = new LanguageManager(
-                getDataFolder(),
-                getConfig().getString("lang"),
-                apiManagers.getDebugManager(),
-                apiManagers.getGlobalLanguageManager()
-        );
-        language.saveDefaultLanguage("lang/en.yml", this);
-        language.refreshMessages();
-
-        DataManager data = apiManagers.getDataManager();
+        DataManager data = initializer.getGlobalManagersWrapper().getDataManager();
         data.registerTables(packageUtil.get("data"), getFile());
 
-        UiManager uiManager = apiManagers.getUiManager();
+        UiManager uiManager = initializer.getGlobalManagersWrapper().getUiManager();
         uiManager.setRequired(true);
 
         userManager = new UserManager(this,uiManager);
@@ -81,7 +69,7 @@ public final class Kthirst extends JavaPlugin {
 
         machineManager = new MachineManager(data,language,this);
 
-        ThirstWrapper wrapper = new ThirstWrapper(apiManagers,language,this,adventure, packageUtil, drinkManager, userManager, machineManager);
+        ThirstWrapper wrapper = new ThirstWrapper( initializer, drinkManager, userManager, machineManager);
 
         {
             drinkManager.setWrapper(wrapper);
@@ -136,14 +124,14 @@ public final class Kthirst extends JavaPlugin {
         {
             resourcePack.setRequired(true);
             resourcePack.registerPlugin(packageUtil.tag(), getDescription().getVersion());
-            resourcePack.registerCustomChar(packageUtil.tag(), "\uA001", "waterfull", getResource("resourcepack/waterfull.png"), 9, -16, 9);
-            resourcePack.registerCustomChar(packageUtil.tag(), "\uA002", "waterhalf", getResource("resourcepack/waterhalf.png"), 9, -16, 9);
-            resourcePack.registerCustomChar(packageUtil.tag(), "\uA003", "waterempty", getResource("resourcepack/waterempty.png"), 9, -16, 9);
-            resourcePack.registerCustomChar(packageUtil.tag(), "\uA004", "waterfull", getResource("resourcepack/waterfull.png"), 9, -5, 9);
-            resourcePack.registerCustomChar(packageUtil.tag(), "\uA005", "waterhalf", getResource("resourcepack/waterhalf.png"), 9, -5, 9);
-            resourcePack.registerCustomChar(packageUtil.tag(), "\uA006", "waterempty", getResource("resourcepack/waterempty.png"), 9, -5, 9);
-            resourcePack.registerCustomChar(packageUtil.tag(), "\uF901", "thirstmachinemenu", getResource("resourcepack/thirstmachinemenu.png"), 71, 13, 176);
-            resourcePack.registerCustomChar(packageUtil.tag(), "\uF902", "thirstmachineprogress", getResource("resourcepack/thirstmachineprogress.png"), 4, -29, 1);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA001", "waterfull.png", getResource("resourcepack/waterfull.png"), 9, -16, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA002", "waterhalf.png", getResource("resourcepack/waterhalf.png"), 9, -16, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA003", "waterempty.png", getResource("resourcepack/waterempty.png"), 9, -16, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA004", "waterfull.png", getResource("resourcepack/waterfull.png"), 9, -5, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA005", "waterhalf.png", getResource("resourcepack/waterhalf.png"), 9, -5, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uA006", "waterempty.png", getResource("resourcepack/waterempty.png"), 9, -5, 9);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uF901", "thirstmachinemenu.png", getResource("resourcepack/thirstmachinemenu.png"), 71, 13, 176);
+            resourcePack.registerCustomChar(packageUtil.tag(), "\uF902", "thirstmachineprogress.png", getResource("resourcepack/thirstmachineprogress.png"), 4, -29, 1);
         }
 
         ListenerManager listener = new ListenerManager(wrapper, getFile());
