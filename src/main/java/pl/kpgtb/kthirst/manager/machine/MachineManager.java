@@ -225,7 +225,8 @@ public class MachineManager {
 
     public IInventoryHelper getInventoryHelper() {
         IInventoryHelper result;
-        switch (Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3]) {
+        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        switch (version) {
             case "v1_14_R1":
             case "v1_16_R3":
             case "v1_16_R2":
@@ -251,9 +252,15 @@ public class MachineManager {
             case "v1_19_R3":
                 result = new InventoryHelper_1_19_3();
                 break;
+            case "v1_20_R1":
+                result = new InventoryHelper_1_20();
+                break;
             default:
                 result =  null;
                 break;
+        }
+        if(result == null && version.startsWith("v1_2")) {
+            result = new InventoryHelper_1_20();
         }
         return result;
     }
