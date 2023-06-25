@@ -1,6 +1,6 @@
 package pl.kpgtb.kthirst.listener;
 
-import com.github.kpgtb.ktools.manager.listener.Klistener;
+import com.github.kpgtb.ktools.manager.listener.KListener;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,7 +17,7 @@ import pl.kpgtb.kthirst.util.ThirstWrapper;
 import java.util.HashSet;
 import java.util.Set;
 
-public class InvListener extends Klistener {
+public class InvListener extends KListener {
     private final ThirstWrapper wrapper;
 
     public InvListener(ToolsObjectWrapper toolsObjectWrapper) {

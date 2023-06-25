@@ -22,72 +22,16 @@ public class ThirstUser {
     private final double maxThirst;
 
     private final DataManager dataManager;
-    private final UiManager uiManager;
-    private final LanguageManager languageManager;
-    private final BaseUiObject baseUI;
 
     private boolean damaging;
-    private boolean inWater;
 
-    public ThirstUser(UUID uuid, double thirst, double maxThirst, DataManager dataManager, UiManager uiManager, LanguageManager languageManager, int uiOffset) {
+    public ThirstUser(UUID uuid, double thirst, double maxThirst, DataManager dataManager) {
         this.uuid = uuid;
         this.thirst = thirst;
         this.maxThirst = maxThirst;
 
         this.dataManager = dataManager;
-        this.uiManager = uiManager;
-        this.languageManager = languageManager;
         this.damaging = false;
-        this.inWater = false;
-
-        baseUI = new BaseUiObject("", Alignment.LEFT, uiOffset);
-
-        setupUI();
-    }
-
-    public void setupUI() {
-        // 1 icon = 2 points
-        // icons = 10 = 20 points
-
-        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-        if(!op.isOnline() || op.getPlayer() == null) {
-            return;
-        }
-        Player player = op.getPlayer();
-        GameMode gameMode = player.getGameMode();
-
-        if(gameMode.equals(GameMode.CREATIVE) || gameMode.equals(GameMode.SPECTATOR)) {
-            baseUI.update("");
-            return;
-        }
-
-        double fullIcon = maxThirst / 10.0;
-        int fullIconsInUI = (int) Math.floor(thirst / fullIcon);
-        boolean hasHalfIconInUI = thirst % fullIcon > 0;
-
-        int emptyIconsInUI = 10 - fullIconsInUI;
-        if(hasHalfIconInUI) {
-            emptyIconsInUI -= 1;
-        }
-
-        String fullIconChar = inWater ? "\uA004\uF802" : "\uA001\uF802";
-        String halfIconChar = inWater ? "\uA005\uF802" : "\uA002\uF802";
-        String emptyIconChar = inWater ? "\uA006\uF802" : "\uA003\uF802";
-
-        StringBuilder ui = new StringBuilder();
-        for(int i = 0; i < emptyIconsInUI; i++) {
-            ui.append(emptyIconChar);
-        }
-
-        if(hasHalfIconInUI) {
-            ui.append(halfIconChar);
-        }
-
-        for(int i = 0; i < fullIconsInUI; i++) {
-            ui.append(fullIconChar);
-        }
-
-        baseUI.update(NoShadow.disableShadow(ui.toString(), languageManager));
     }
 
     public void save() throws SQLException {
@@ -103,7 +47,6 @@ public class ThirstUser {
         } else {
             this.thirst = thirst;
         }
-        setupUI();
     }
 
     public UUID getUuid() {
@@ -112,10 +55,6 @@ public class ThirstUser {
 
     public double getThirst() {
         return thirst;
-    }
-
-    public BaseUiObject getBaseUI() {
-        return baseUI;
     }
 
     public boolean isDamaging() {
@@ -128,14 +67,6 @@ public class ThirstUser {
 
     public void setDamaging(boolean damaging) {
         this.damaging = damaging;
-    }
-
-    public boolean isInWater() {
-        return inWater;
-    }
-
-    public void setInWater(boolean inWater) {
-        this.inWater = inWater;
     }
 
 }

@@ -1,6 +1,6 @@
 package pl.kpgtb.kthirst.recipe;
 
-import com.github.kpgtb.ktools.manager.recipe.Krecipe;
+import com.github.kpgtb.ktools.manager.recipe.KRecipe;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
-public class VanillaWaterRecipe extends Krecipe {
+public class VanillaWaterRecipe extends KRecipe {
     private final NamespacedKey key;
     private final ToolsObjectWrapper wrapper;
 

@@ -1,6 +1,7 @@
 package pl.kpgtb.kthirst.placeholder;
 
 import com.github.kpgtb.ktools.manager.data.DataManager;
+import com.github.kpgtb.ktools.manager.ui.bar.BarManager;
 import com.j256.ormlite.dao.Dao;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
@@ -17,10 +18,12 @@ import java.util.UUID;
 public class ThirstPlaceholder extends PlaceholderExpansion {
     private final UserManager userManager;
     private final DataManager dataManager;
+    private final BarManager barManager;
 
-    public ThirstPlaceholder(UserManager userManager, DataManager dataManager) {
+    public ThirstPlaceholder(UserManager userManager, DataManager dataManager, BarManager barManager) {
         this.userManager = userManager;
         this.dataManager = dataManager;
+        this.barManager = barManager;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class ThirstPlaceholder extends PlaceholderExpansion {
                 return "";
             }
         } else {
-            thirst = user.getThirst();
+            thirst = barManager.getValue(barManager.getBar("thirst"),player.getPlayer());
         }
 
         return String.valueOf(thirst);

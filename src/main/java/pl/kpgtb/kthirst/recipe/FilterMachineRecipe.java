@@ -1,6 +1,6 @@
 package pl.kpgtb.kthirst.recipe;
 
-import com.github.kpgtb.ktools.manager.recipe.Krecipe;
+import com.github.kpgtb.ktools.manager.recipe.KRecipe;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -9,7 +9,7 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 
-public class FilterMachineRecipe extends Krecipe {
+public class FilterMachineRecipe extends KRecipe {
     private final NamespacedKey key;
     private final ToolsObjectWrapper wrapper;
 

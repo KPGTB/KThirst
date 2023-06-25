@@ -18,7 +18,7 @@ import pl.kpgtb.kthirst.gui.response.LoreResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoreEditGUI {
+public class LoreEditGUI extends KGui{
     private final ToolsObjectWrapper wrapper;
     private final KGui lastGUI;
     private final LoreResponse response;
@@ -31,6 +31,11 @@ public class LoreEditGUI {
     private List<GuiContainer> pages;
 
     public LoreEditGUI(ToolsObjectWrapper wrapper, KGui lastGUI, LoreResponse response, Player player, List<String> defaultLore) {
+        super(
+                wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "drinkLore"),
+                2,
+                wrapper
+        );
         this.wrapper = wrapper;
         this.lastGUI = lastGUI;
         this.response = response;
@@ -42,16 +47,12 @@ public class LoreEditGUI {
         this.pages = new ArrayList<>();
     }
 
-    public void open() {
-        KGui gui = new KGui(
-                wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "drinkLore"),
-                2,
-                wrapper
-        );
+    @Override
+    public void prepareGui() {
+        this.blockClick();
+        resetContainers();
 
-        gui.blockClick();
-
-        gui.setCloseAction(e -> {
+        this.setCloseAction(e -> {
             if(redirect) {
                 redirect = false;
                 return;
@@ -68,26 +69,26 @@ public class LoreEditGUI {
             }
         });
 
-        PagedGuiContainer pagedGuiContainer = new PagedGuiContainer(gui,0,0,9,1);
+        PagedGuiContainer pagedGuiContainer = new PagedGuiContainer(this,0,0,9,1);
 
-        generateLoreItems(gui,pagedGuiContainer);
-        gui.addContainer(pagedGuiContainer);
+        generateLoreItems(this,pagedGuiContainer);
+        this.addContainer(pagedGuiContainer);
 
-        GuiContainer manageContainer = new GuiContainer(gui, 0,1,9,1);
+        GuiContainer manageContainer = new GuiContainer(this, 0,1,9,1);
         manageContainer.setItem(0,0, LeftItem.get(wrapper,pagedGuiContainer));
         manageContainer.setItem(8,0, RightItem.get(wrapper,pagedGuiContainer));
 
         GuiItem addLoreLine = new GuiItem(new ItemBuilder(Material.PAPER)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "addLoreLine"))
         );
-        addLoreLine.setClickAction(e -> {
+        addLoreLine.setClickAction((e,place) -> {
             redirect = true;
-            new KWriteGui(wrapper,gui,player,(text) -> {
+            new KWriteGui(wrapper,this,player,(text) -> {
                 if(text.isEmpty()) {
                     return;
                 }
                 newLore.add(wrapper.getLanguageManager().convertMmToString(text));
-                generateLoreItems(gui,pagedGuiContainer);
+                generateLoreItems(this,pagedGuiContainer);
             }).open();
         });
         manageContainer.setItem(3, 0,addLoreLine);
@@ -95,15 +96,13 @@ public class LoreEditGUI {
         GuiItem applyLore = new GuiItem(new ItemBuilder(Material.EMERALD)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "applyEdit"))
         );
-        applyLore.setClickAction(e -> {
+        applyLore.setClickAction((e,place) -> {
             responsed = true;
             response.response(newLore);
             lastGUI.open(player);
         });
         manageContainer.setItem(5,0,applyLore);
-        gui.addContainer(manageContainer);
-
-        gui.open(player);
+        this.addContainer(manageContainer);
     }
 
     private void generateLoreItems(KGui gui, PagedGuiContainer pagedGuiContainer) {
@@ -122,7 +121,7 @@ public class LoreEditGUI {
                     .displayname(loreLine)
                     .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "removeLoreLine"))
             );
-            item.setClickAction(e -> {
+            item.setClickAction((e,place) -> {
                 newLore.remove(loreLine);
                 generateLoreItems(gui,pagedGuiContainer);
             });

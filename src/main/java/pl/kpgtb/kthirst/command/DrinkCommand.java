@@ -51,7 +51,7 @@ public class DrinkCommand extends KCommand {
 
     @Description("Edit drink")
     public void edit(Player player, DbDrink drink) {
-        new DrinkEditGUI(wrapper,drink,player).open();
+        new DrinkEditGUI(wrapper,drink,player).open(player);
     }
 
     @Description("Remove drink")

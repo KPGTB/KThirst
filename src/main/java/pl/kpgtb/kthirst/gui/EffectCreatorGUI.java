@@ -15,7 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import pl.kpgtb.kthirst.data.type.DrinkEffect;
 import pl.kpgtb.kthirst.gui.response.EffectResponse;
 
-public class EffectCreatorGUI {
+public class EffectCreatorGUI extends KGui{
     private final ToolsObjectWrapper wrapper;
     private final KGui lastGUI;
     private final EffectResponse response;
@@ -26,6 +26,11 @@ public class EffectCreatorGUI {
     private DrinkEffect effect;
 
     public EffectCreatorGUI(ToolsObjectWrapper wrapper, KGui lastGUI, EffectResponse response, Player player) {
+        super(
+                wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "effectList"),
+                1,
+                wrapper
+        );
         this.wrapper = wrapper;
         this.lastGUI = lastGUI;
         this.response = response;
@@ -35,16 +40,12 @@ public class EffectCreatorGUI {
         this.effect = new DrinkEffect("",0,0);
     }
 
-    public void open() {
-        KGui gui = new KGui(
-                wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "effectList"),
-                1,
-                wrapper
-        );
+    @Override
+    public void prepareGui() {
+        blockClick();
+        resetContainers();
 
-        gui.blockClick();
-
-        gui.setCloseAction(e -> {
+        setCloseAction(e -> {
             if(redirect) {
                 redirect = false;
                 return;
@@ -61,22 +62,22 @@ public class EffectCreatorGUI {
             }
         });
 
-        GuiContainer guiContainer = new GuiContainer(gui,0,0,9,1);
+        GuiContainer guiContainer = new GuiContainer(this,0,0,9,1);
 
         GuiItem setType = new GuiItem(new ItemBuilder(Material.GLASS_BOTTLE)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "setType"))
                 .lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getType()))
         );
-        setType.setClickAction(e -> {
+        setType.setClickAction((e,place) -> {
             redirect = true;
-            new KWriteGui(wrapper,gui,player,text -> {
+            new KWriteGui(wrapper,this,player,text -> {
                String type = text.toUpperCase();
                if(PotionEffectType.getByName(type) == null) {
                    type = "WRONG";
                }
                effect.setType(type);
                setType.setItemBuilder(setType.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getType()),0));
-               gui.update();
+                this.update();
             }).open();
         });
         guiContainer.setItem(3,0,setType);
@@ -85,13 +86,13 @@ public class EffectCreatorGUI {
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "setAmplifier"))
                 .lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getAmplifier()))
         );
-        setAmplifier.setClickAction(e -> {
+        setAmplifier.setClickAction((e,place) -> {
             redirect = true;
-            new KCountGui(wrapper,gui,value -> {
+            new KCountGui(wrapper,this,value -> {
                 effect.setAmplifier((int) value);
                 setAmplifier.setItemBuilder(setAmplifier.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getAmplifier()),0));
-                gui.update();
-            }, player,effect.getAmplifier(),0,254,false,Material.GLOWSTONE_DUST).open();
+                this.update();
+            }, player,effect.getAmplifier(),0,254,false,Material.GLOWSTONE_DUST).open(player);
         });
         guiContainer.setItem(4,0,setAmplifier);
 
@@ -99,28 +100,26 @@ public class EffectCreatorGUI {
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "setDuration"))
                 .lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getDuration()))
         );
-        setDuration.setClickAction(e -> {
+        setDuration.setClickAction((e,place) -> {
             redirect = true;
-            new KCountGui(wrapper,gui,value -> {
+            new KCountGui(wrapper,this,value -> {
                 effect.setDuration((int) value);
                 setDuration.setItemBuilder(setDuration.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getDuration()),0));
-                gui.update();
-            }, player,effect.getDuration(),0,10000000,false,Material.CLOCK).open();
+                this.update();
+            }, player,effect.getDuration(),0,10000000,false,Material.CLOCK).open(player);
         });
         guiContainer.setItem(5,0,setDuration);
 
         GuiItem applyEffect = new GuiItem(new ItemBuilder(Material.EMERALD)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "applyEdit"))
         );
-        applyEffect.setClickAction(e -> {
+        applyEffect.setClickAction((e,place) -> {
             responsed = true;
             response.response(effect.getType().isEmpty() || effect.getType().equalsIgnoreCase("WRONG") ? null : effect);
             lastGUI.open(player);
         });
         guiContainer.setItem(8,0,applyEffect);
 
-        gui.addContainer(guiContainer);
-
-        gui.open(player);
+        this.addContainer(guiContainer);
     }
 }

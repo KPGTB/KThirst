@@ -18,7 +18,7 @@ package pl.kpgtb.kthirst.manager.machine;
 
 import com.github.kpgtb.ktools.manager.data.DataManager;
 import com.github.kpgtb.ktools.manager.item.ItemManager;
-import com.github.kpgtb.ktools.manager.item.builder.KitemBuilder;
+import com.github.kpgtb.ktools.manager.item.builder.KItemBuilder;
 import com.github.kpgtb.ktools.manager.language.LanguageManager;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import com.j256.ormlite.dao.Dao;
@@ -81,7 +81,7 @@ public class MachineManager {
             }
         }
 
-        KitemBuilder builder = new KitemBuilder(wrapper,"kthirst", machineType, machineItemStack);
+        KItemBuilder builder = new KItemBuilder(wrapper,"kthirst", machineType, machineItemStack);
         builder.register();
 
         machines.put(machineType, baseMachine);

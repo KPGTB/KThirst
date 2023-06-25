@@ -1,6 +1,6 @@
 package pl.kpgtb.kthirst.listener;
 
-import com.github.kpgtb.ktools.manager.listener.Klistener;
+import com.github.kpgtb.ktools.manager.listener.KListener;
 import com.github.kpgtb.ktools.util.item.ItemUtil;
 import com.github.kpgtb.ktools.util.ui.FontWidth;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
@@ -19,7 +19,7 @@ import pl.kpgtb.kthirst.util.ThirstWrapper;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class InteractListener extends Klistener {
+public class InteractListener extends KListener {
     private final ThirstWrapper wrapper;
 
     public InteractListener(ToolsObjectWrapper toolsObjectWrapper) {

@@ -1,6 +1,6 @@
 package pl.kpgtb.kthirst.listener;
 
-import com.github.kpgtb.ktools.manager.listener.Klistener;
+import com.github.kpgtb.ktools.manager.listener.KListener;
 import com.github.kpgtb.ktools.util.item.ItemUtil;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import org.bukkit.Material;
@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class QuitListener extends Klistener {
+public class QuitListener extends KListener {
     private final ThirstWrapper wrapper;
 
     public QuitListener(ToolsObjectWrapper toolsObjectWrapper) {
@@ -33,7 +33,6 @@ public class QuitListener extends Klistener {
         if(wrapper.getUserManager().hasUser(uuid)) {
             ThirstUser user = wrapper.getUserManager().getUser(uuid);
             user.save();
-            wrapper.getUiManager().removeUI(uuid, user.getBaseUI());
             wrapper.getUserManager().removeUser(uuid);
         }
     }

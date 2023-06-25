@@ -1,6 +1,8 @@
 package pl.kpgtb.kthirst.manager.drink;
 
-import com.github.kpgtb.ktools.manager.item.builder.KitemBuilder;
+import com.github.kpgtb.ktools.manager.item.builder.KItemBuilder;
+import com.github.kpgtb.ktools.manager.ui.bar.BarManager;
+import com.github.kpgtb.ktools.manager.ui.bar.KBar;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -52,7 +54,7 @@ public class DrinkManager {
     public void reloadDrink(DbDrink drink) {
         removeDrink(drink);
         drinks.put(drink.getCode(), drink);
-        KitemBuilder builder = new KitemBuilder(wrapper, "kthirst", drink.getCode(), prepareDrinkItem(drink));
+        KItemBuilder builder = new KItemBuilder(wrapper, "kthirst", drink.getCode(), prepareDrinkItem(drink));
         builder.setOnConsumeAction(e -> handleDrink(drink,e.getPlayer()));
         builder.register();
     }
@@ -74,7 +76,13 @@ public class DrinkManager {
         if(user == null) {
             return;
         }
-        user.setThirst(user.getThirst() + drink.getPoints());
+        BarManager barManager = wrapper.getBarManager();
+        KBar bar = wrapper.getBarManager().getBar("thirst");
+        barManager.setValue(
+                bar,
+                player,
+                barManager.getValue(bar,player) + drink.getPoints()
+        );
         for(DrinkEffect effect : drink.getEffects()) {
             player.addPotionEffect(new PotionEffect(
                     PotionEffectType.getByName(effect.getType()),

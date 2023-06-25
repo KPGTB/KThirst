@@ -1,6 +1,6 @@
 package pl.kpgtb.kthirst.listener;
 
-import com.github.kpgtb.ktools.manager.listener.Klistener;
+import com.github.kpgtb.ktools.manager.listener.KListener;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import com.j256.ormlite.dao.Dao;
 import org.bukkit.entity.Player;
@@ -13,7 +13,7 @@ import pl.kpgtb.kthirst.util.ThirstWrapper;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class JoinListener extends Klistener {
+public class JoinListener extends KListener {
     private final ThirstWrapper wrapper;
 
     public JoinListener(ToolsObjectWrapper toolsObjectWrapper) {
@@ -27,7 +27,6 @@ public class JoinListener extends Klistener {
         UUID uuid = player.getUniqueId();
 
         if(wrapper.getUserManager().hasUser(uuid)) {
-            wrapper.getUiManager().removeUI(uuid, wrapper.getUserManager().getUser(uuid).getBaseUI());
             wrapper.getUserManager().removeUser(uuid);
         }
 
@@ -39,9 +38,8 @@ public class JoinListener extends Klistener {
         }
 
         double playerThirst = (double) usersDAO.queryForId(uuid).getThirst();
-        ThirstUser user = new ThirstUser(uuid, playerThirst, maxThirst, wrapper.getDataManager(),wrapper.getUiManager(), wrapper.getLanguageManager(), 15);
+        ThirstUser user = new ThirstUser(uuid, playerThirst, maxThirst, wrapper.getDataManager());
         wrapper.getUserManager().addUser(uuid, user);
-
-        wrapper.getUiManager().addUI(uuid, user.getBaseUI());
+        wrapper.getBarManager().updateBars(player);
     }
 }

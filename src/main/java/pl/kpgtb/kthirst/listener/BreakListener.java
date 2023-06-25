@@ -1,6 +1,6 @@
 package pl.kpgtb.kthirst.listener;
 
-import com.github.kpgtb.ktools.manager.listener.Klistener;
+import com.github.kpgtb.ktools.manager.listener.KListener;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -12,7 +12,7 @@ import pl.kpgtb.kthirst.util.ThirstWrapper;
 
 import java.sql.SQLException;
 
-public class BreakListener extends Klistener {
+public class BreakListener extends KListener {
     private final ThirstWrapper wrapper;
 
     public BreakListener(ToolsObjectWrapper toolsObjectWrapper) {

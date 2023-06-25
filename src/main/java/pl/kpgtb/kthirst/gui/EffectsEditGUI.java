@@ -19,7 +19,7 @@ import pl.kpgtb.kthirst.gui.response.EffectsResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EffectsEditGUI {
+public class EffectsEditGUI extends KGui{
     private final ToolsObjectWrapper wrapper;
     private final KGui lastGUI;
     private final EffectsResponse response;
@@ -32,6 +32,11 @@ public class EffectsEditGUI {
     private List<GuiContainer> pages;
 
     public EffectsEditGUI(ToolsObjectWrapper wrapper, KGui lastGUI, EffectsResponse response, Player player, List<DrinkEffect> defaultEffects) {
+        super(
+                wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "effectList"),
+                2,
+                wrapper
+        );
         this.wrapper = wrapper;
         this.lastGUI = lastGUI;
         this.response = response;
@@ -43,16 +48,12 @@ public class EffectsEditGUI {
         this.pages = new ArrayList<>();
     }
 
-    public void open() {
-        KGui gui = new KGui(
-                wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "effectList"),
-                2,
-                wrapper
-        );
+    @Override
+    public void prepareGui() {
+        this.blockClick();
+        resetContainers();
 
-        gui.blockClick();
-
-        gui.setCloseAction(e -> {
+        this.setCloseAction(e -> {
             if(redirect) {
                 redirect = false;
                 return;
@@ -69,42 +70,40 @@ public class EffectsEditGUI {
             }
         });
 
-        PagedGuiContainer pagedGuiContainer = new PagedGuiContainer(gui,0,0,9,1);
+        PagedGuiContainer pagedGuiContainer = new PagedGuiContainer(this,0,0,9,1);
 
-        generateEffectsItems(gui,pagedGuiContainer);
-        gui.addContainer(pagedGuiContainer);
+        generateEffectsItems(this,pagedGuiContainer);
+        this.addContainer(pagedGuiContainer);
 
-        GuiContainer manageContainer = new GuiContainer(gui, 0,1,9,1);
+        GuiContainer manageContainer = new GuiContainer(this, 0,1,9,1);
         manageContainer.setItem(0,0, LeftItem.get(wrapper,pagedGuiContainer));
         manageContainer.setItem(8,0, RightItem.get(wrapper,pagedGuiContainer));
 
         GuiItem addEffect = new GuiItem(new ItemBuilder(Material.GLASS_BOTTLE)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "addEffect"))
         );
-        addEffect.setClickAction(e -> {
+        addEffect.setClickAction((e,place) -> {
             redirect = true;
-            new EffectCreatorGUI(wrapper,gui,(effect) -> {
+            new EffectCreatorGUI(wrapper,this,(effect) -> {
                 if(effect == null) {
                     return;
                 }
                 newEffects.add(effect);
-                generateEffectsItems(gui,pagedGuiContainer);
-            },player).open();
+                generateEffectsItems(this,pagedGuiContainer);
+            },player).open(player);
         });
         manageContainer.setItem(3, 0,addEffect);
 
         GuiItem applyEffects = new GuiItem(new ItemBuilder(Material.EMERALD)
                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "applyEdit"))
         );
-        applyEffects.setClickAction(e -> {
+        applyEffects.setClickAction((e,place) -> {
             responsed = true;
             response.response(newEffects);
             lastGUI.open(player);
         });
         manageContainer.setItem(5,0,applyEffects);
-        gui.addContainer(manageContainer);
-
-        gui.open(player);
+        this.addContainer(manageContainer);
     }
 
     private void generateEffectsItems(KGui gui, PagedGuiContainer pagedGuiContainer) {
@@ -131,7 +130,7 @@ public class EffectsEditGUI {
                     )
                     .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "removeEffect"))
             );
-            item.setClickAction(e -> {
+            item.setClickAction((e,place) -> {
                 newEffects.remove(effect);
                 generateEffectsItems(gui,pagedGuiContainer);
             });

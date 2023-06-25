@@ -1,13 +1,13 @@
 package pl.kpgtb.kthirst.listener;
 
-import com.github.kpgtb.ktools.manager.listener.Klistener;
+import com.github.kpgtb.ktools.manager.listener.KListener;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
 import pl.kpgtb.kthirst.manager.machine.BaseMachine;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
-public class PlaceListener extends Klistener {
+public class PlaceListener extends KListener {
     private final ThirstWrapper wrapper;
 
     public PlaceListener(ToolsObjectWrapper toolsObjectWrapper) {

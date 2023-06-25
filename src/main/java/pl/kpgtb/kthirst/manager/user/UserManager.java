@@ -17,6 +17,8 @@
 package pl.kpgtb.kthirst.manager.user;
 
 import com.github.kpgtb.ktools.manager.ui.UiManager;
+import com.github.kpgtb.ktools.manager.ui.bar.BarManager;
+import com.github.kpgtb.ktools.manager.ui.bar.KBar;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -35,10 +37,12 @@ public class UserManager {
     private final JavaPlugin plugin;
     private final HashMap<UUID, ThirstUser> users;
 
-    public UserManager(JavaPlugin plugin, UiManager uiManager) {
+    public UserManager(JavaPlugin plugin) {
         this.plugin = plugin;
         users = new HashMap<>();
+    }
 
+    public void prepare(KBar thirstBar, BarManager barManager) {
         final double thirstPerMinute = 0.5;
         final double hpPerSecond = 1.0;
 
@@ -53,7 +57,6 @@ public class UserManager {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                        uiManager.removeUI(user.getUuid(), user.getBaseUI());
                         users.remove(user.getUuid());
                         continue;
                     }
@@ -63,14 +66,14 @@ public class UserManager {
                         continue;
                     }
 
-                    double userThirst = user.getThirst();
+                    double userThirst = barManager.getValue(thirstBar,op.getPlayer());
                     if(userThirst - thirstPerMinute < 0 && !user.isDamaging()) {
-                        user.setThirst(0.0);
-                        damagePlayer(user, hpPerSecond);
+                        barManager.setValue(thirstBar,op.getPlayer(),0.0);
+                        damagePlayer(user, hpPerSecond,thirstBar,barManager);
                         user.setDamaging(true);
                         continue;
                     }
-                    user.setThirst(userThirst - thirstPerMinute);
+                    barManager.setValue(thirstBar,op.getPlayer(),userThirst - thirstPerMinute);
                 }
             }
         }.runTaskTimer(plugin, 60 * 20, 60 * 20);
@@ -89,15 +92,10 @@ public class UserManager {
         }.runTaskTimer(plugin, 1200,1200);
     }
 
-    private void damagePlayer(ThirstUser user, double hpPerSecond) {
+    private void damagePlayer(ThirstUser user, double hpPerSecond, KBar bar, BarManager barManager) {
         BukkitTask damageTask = new BukkitRunnable() {
             @Override
             public void run() {
-                if(user.getThirst() > 0) {
-                    user.setDamaging(false);
-                    cancel();
-                }
-
                 OfflinePlayer op = Bukkit.getOfflinePlayer(user.getUuid());
 
                 if(!op.isOnline()) {
@@ -112,6 +110,11 @@ public class UserManager {
                     cancel();
                 }
 
+                if(barManager.getValue(bar,player) > 0) {
+                    user.setDamaging(false);
+                    cancel();
+                }
+
                 GameMode gm = player.getGameMode();
                 if(gm.equals(GameMode.CREATIVE) || gm.equals(GameMode.SPECTATOR)) {
                     user.setDamaging(false);
@@ -122,7 +125,7 @@ public class UserManager {
 
                 if(playerHP - hpPerSecond <= 0) {
                     player.setHealth(0.0);
-                    user.setThirst(user.getMaxThirst());
+                    barManager.setValue(bar,player,bar.getDefaultValue());
                     try {
                         user.save();
                     } catch (SQLException e) {
