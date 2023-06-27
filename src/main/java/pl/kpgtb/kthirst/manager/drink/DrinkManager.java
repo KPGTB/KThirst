@@ -14,7 +14,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import pl.kpgtb.kthirst.data.DbDrink;
 import pl.kpgtb.kthirst.data.type.DrinkEffect;
-import pl.kpgtb.kthirst.manager.user.ThirstUser;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
 import java.sql.SQLException;
@@ -72,12 +71,8 @@ public class DrinkManager {
         return item;
     }
     private void handleDrink(DbDrink drink, Player player) {
-        ThirstUser user = wrapper.getUserManager().getUser(player.getUniqueId());
-        if(user == null) {
-            return;
-        }
         BarManager barManager = wrapper.getBarManager();
-        KBar bar = wrapper.getBarManager().getBar("thirst");
+        KBar bar = wrapper.getThirstBar();
         barManager.setValue(
                 bar,
                 player,

@@ -5,7 +5,6 @@ import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import pl.kpgtb.kthirst.manager.machine.BaseMachine;
 import pl.kpgtb.kthirst.manager.machine.PlacedMachine;
 import pl.kpgtb.kthirst.util.ThirstWrapper;

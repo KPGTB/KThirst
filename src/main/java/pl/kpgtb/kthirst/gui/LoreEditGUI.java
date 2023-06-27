@@ -17,6 +17,7 @@ import pl.kpgtb.kthirst.gui.response.LoreResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LoreEditGUI extends KGui{
     private final ToolsObjectWrapper wrapper;
@@ -28,7 +29,6 @@ public class LoreEditGUI extends KGui{
     private boolean responsed;
     private boolean redirect;
     private List<String> newLore;
-    private List<GuiContainer> pages;
 
     public LoreEditGUI(ToolsObjectWrapper wrapper, KGui lastGUI, LoreResponse response, Player player, List<String> defaultLore) {
         super(
@@ -44,7 +44,6 @@ public class LoreEditGUI extends KGui{
         this.responsed = false;
         this.redirect = false;
         this.newLore = new ArrayList<>(defaultLore);
-        this.pages = new ArrayList<>();
     }
 
     @Override
@@ -70,9 +69,20 @@ public class LoreEditGUI extends KGui{
         });
 
         PagedGuiContainer pagedGuiContainer = new PagedGuiContainer(this,0,0,9,1);
-
-        generateLoreItems(this,pagedGuiContainer);
-        this.addContainer(pagedGuiContainer);
+        pagedGuiContainer.fillWithItems(
+                newLore.stream().map((loreLine) -> {
+                    GuiItem item = new GuiItem(new ItemBuilder(Material.PAPER)
+                            .displayname(loreLine)
+                            .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "removeLoreLine"))
+                    );
+                    item.setClickAction((e,place) -> {
+                        newLore.remove(loreLine);
+                        prepareGui();
+                    });
+                    return item;
+                }).collect(Collectors.toList())
+        );
+        addContainer(pagedGuiContainer);
 
         GuiContainer manageContainer = new GuiContainer(this, 0,1,9,1);
         manageContainer.setItem(0,0, LeftItem.get(wrapper,pagedGuiContainer));
@@ -88,7 +98,6 @@ public class LoreEditGUI extends KGui{
                     return;
                 }
                 newLore.add(wrapper.getLanguageManager().convertMmToString(text));
-                generateLoreItems(this,pagedGuiContainer);
             }).open();
         });
         manageContainer.setItem(3, 0,addLoreLine);
@@ -103,32 +112,5 @@ public class LoreEditGUI extends KGui{
         });
         manageContainer.setItem(5,0,applyLore);
         this.addContainer(manageContainer);
-    }
-
-    private void generateLoreItems(KGui gui, PagedGuiContainer pagedGuiContainer) {
-        pagedGuiContainer.clearPages();
-        pages.clear();
-        pages.add(new GuiContainer(pagedGuiContainer));
-
-        int x = 0;
-        for(String loreLine : newLore) {
-            if(x >= 9) {
-                x = 0;
-                pages.add(new GuiContainer(pagedGuiContainer));
-            }
-            GuiContainer page = pages.get(pages.size() - 1);
-            GuiItem item = new GuiItem(new ItemBuilder(Material.PAPER)
-                    .displayname(loreLine)
-                    .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "removeLoreLine"))
-            );
-            item.setClickAction((e,place) -> {
-                newLore.remove(loreLine);
-                generateLoreItems(gui,pagedGuiContainer);
-            });
-            page.setItem(x,0,item);
-            x++;
-        }
-        pages.forEach(pagedGuiContainer::addPage);
-        gui.update();
     }
 }

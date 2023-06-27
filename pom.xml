@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.kpgtb</groupId>
-    <artifactId>Kthirst</artifactId>
-    <version>2.1.2-SNAPSHOT</version>
+    <artifactId>KThirst</artifactId>
+    <version>2.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -81,8 +81,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.KPGTB</groupId>
-            <artifactId>Ktools</artifactId>
-            <version>943cea4bf4</version>
+            <artifactId>KTools</artifactId>
+            <version>2.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

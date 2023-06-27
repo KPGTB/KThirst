@@ -18,6 +18,7 @@ import pl.kpgtb.kthirst.gui.response.EffectsResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EffectsEditGUI extends KGui{
     private final ToolsObjectWrapper wrapper;
@@ -29,7 +30,6 @@ public class EffectsEditGUI extends KGui{
     private boolean responsed;
     private boolean redirect;
     private List<DrinkEffect> newEffects;
-    private List<GuiContainer> pages;
 
     public EffectsEditGUI(ToolsObjectWrapper wrapper, KGui lastGUI, EffectsResponse response, Player player, List<DrinkEffect> defaultEffects) {
         super(
@@ -45,7 +45,6 @@ public class EffectsEditGUI extends KGui{
         this.responsed = false;
         this.redirect = false;
         this.newEffects = new ArrayList<>(defaultEffects);
-        this.pages = new ArrayList<>();
     }
 
     @Override
@@ -71,8 +70,27 @@ public class EffectsEditGUI extends KGui{
         });
 
         PagedGuiContainer pagedGuiContainer = new PagedGuiContainer(this,0,0,9,1);
-
-        generateEffectsItems(this,pagedGuiContainer);
+        pagedGuiContainer.fillWithItems(
+                newEffects.stream().map(effect -> {
+                    GuiItem item = new GuiItem(new ItemBuilder(Material.GLASS_BOTTLE)
+                            .displayname(
+                                    wrapper.getLanguageManager().getSingleString(
+                                            LanguageLevel.PLUGIN,
+                                            "effectListEntry",
+                                            Placeholder.parsed("name", effect.getType()),
+                                            Placeholder.parsed("amplifier", String.valueOf(effect.getAmplifier())),
+                                            Placeholder.parsed("duration", String.valueOf(effect.getDuration()))
+                                    )
+                            )
+                            .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "removeEffect"))
+                    );
+                    item.setClickAction((e,place) -> {
+                        newEffects.remove(effect);
+                        prepareGui();
+                    });
+                    return item;
+                }).collect(Collectors.toList())
+        );
         this.addContainer(pagedGuiContainer);
 
         GuiContainer manageContainer = new GuiContainer(this, 0,1,9,1);
@@ -89,7 +107,6 @@ public class EffectsEditGUI extends KGui{
                     return;
                 }
                 newEffects.add(effect);
-                generateEffectsItems(this,pagedGuiContainer);
             },player).open(player);
         });
         manageContainer.setItem(3, 0,addEffect);
@@ -104,40 +121,5 @@ public class EffectsEditGUI extends KGui{
         });
         manageContainer.setItem(5,0,applyEffects);
         this.addContainer(manageContainer);
-    }
-
-    private void generateEffectsItems(KGui gui, PagedGuiContainer pagedGuiContainer) {
-        pagedGuiContainer.clearPages();
-        pages.clear();
-        pages.add(new GuiContainer(pagedGuiContainer));
-
-        int x = 0;
-        for(DrinkEffect effect : newEffects) {
-            if(x >= 9) {
-                x = 0;
-                pages.add(new GuiContainer(pagedGuiContainer));
-            }
-            GuiContainer page = pages.get(pages.size() - 1);
-            GuiItem item = new GuiItem(new ItemBuilder(Material.GLASS_BOTTLE)
-                    .displayname(
-                            wrapper.getLanguageManager().getSingleString(
-                                    LanguageLevel.PLUGIN,
-                                    "effectListEntry",
-                                    Placeholder.parsed("name", effect.getType()),
-                                    Placeholder.parsed("amplifier", effect.getAmplifier() + ""),
-                                    Placeholder.parsed("duration", effect.getDuration() + "")
-                            )
-                    )
-                    .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "removeEffect"))
-            );
-            item.setClickAction((e,place) -> {
-                newEffects.remove(effect);
-                generateEffectsItems(gui,pagedGuiContainer);
-            });
-            page.setItem(x,0,item);
-            x++;
-        }
-        pages.forEach(pagedGuiContainer::addPage);
-        gui.update();
     }
 }

@@ -16,151 +16,48 @@
 
 package pl.kpgtb.kthirst.manager.user;
 
-import com.github.kpgtb.ktools.manager.ui.UiManager;
 import com.github.kpgtb.ktools.manager.ui.bar.BarManager;
 import com.github.kpgtb.ktools.manager.ui.bar.KBar;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class UserManager {
 
     private final JavaPlugin plugin;
-    private final HashMap<UUID, ThirstUser> users;
+    private final KBar thirstBar;
+    private final BarManager barManager;
 
-    public UserManager(JavaPlugin plugin) {
+    public UserManager(JavaPlugin plugin, KBar thirstBar, BarManager barManager) {
         this.plugin = plugin;
-        users = new HashMap<>();
+        this.thirstBar = thirstBar;
+        this.barManager = barManager;
     }
 
-    public void prepare(KBar thirstBar, BarManager barManager) {
+    public void prepare() {
         final double thirstPerMinute = 0.5;
         final double hpPerSecond = 1.0;
 
-        BukkitTask thirst = new BukkitRunnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
-                for(ThirstUser user : users.values()) {
-                    OfflinePlayer op = Bukkit.getOfflinePlayer(user.getUuid());
-                    if(!op.isOnline()) {
-                        try {
-                            user.save();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                        users.remove(user.getUuid());
-                        continue;
-                    }
+               Bukkit.getOnlinePlayers().forEach(p -> {
+                   GameMode gm = p.getGameMode();
+                   if(gm.equals(GameMode.CREATIVE) || gm.equals(GameMode.SPECTATOR)) {
+                       return;
+                   }
 
-                    GameMode gm = op.getPlayer().getGameMode();
-                    if(gm.equals(GameMode.CREATIVE) || gm.equals(GameMode.SPECTATOR)) {
-                        continue;
-                    }
-
-                    double userThirst = barManager.getValue(thirstBar,op.getPlayer());
-                    if(userThirst - thirstPerMinute < 0 && !user.isDamaging()) {
-                        barManager.setValue(thirstBar,op.getPlayer(),0.0);
-                        damagePlayer(user, hpPerSecond,thirstBar,barManager);
-                        user.setDamaging(true);
-                        continue;
-                    }
-                    barManager.setValue(thirstBar,op.getPlayer(),userThirst - thirstPerMinute);
-                }
+                   double userThirst = barManager.getValue(thirstBar,p);
+                   userThirst -= thirstPerMinute;
+                   if(userThirst < 0.0) {
+                       userThirst = 0.0;
+                       p.damage(hpPerSecond);
+                   }
+                   barManager.setValue(thirstBar,p,userThirst);
+               });
             }
         }.runTaskTimer(plugin, 60 * 20, 60 * 20);
-
-        BukkitTask autoSaver = new BukkitRunnable() {
-            @Override
-            public void run() {
-                for(ThirstUser user : users.values()) {
-                    try {
-                        user.save();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.runTaskTimer(plugin, 1200,1200);
-    }
-
-    private void damagePlayer(ThirstUser user, double hpPerSecond, KBar bar, BarManager barManager) {
-        BukkitTask damageTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                OfflinePlayer op = Bukkit.getOfflinePlayer(user.getUuid());
-
-                if(!op.isOnline()) {
-                    user.setDamaging(false);
-                    cancel();
-                }
-
-                Player player = op.getPlayer();
-
-                if(player == null) {
-                    user.setDamaging(false);
-                    cancel();
-                }
-
-                if(barManager.getValue(bar,player) > 0) {
-                    user.setDamaging(false);
-                    cancel();
-                }
-
-                GameMode gm = player.getGameMode();
-                if(gm.equals(GameMode.CREATIVE) || gm.equals(GameMode.SPECTATOR)) {
-                    user.setDamaging(false);
-                    cancel();
-                }
-
-                double playerHP = player.getHealth();
-
-                if(playerHP - hpPerSecond <= 0) {
-                    player.setHealth(0.0);
-                    barManager.setValue(bar,player,bar.getDefaultValue());
-                    try {
-                        user.save();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    user.setDamaging(false);
-                    cancel();
-                }
-
-                player.damage(hpPerSecond);
-            }
-        }.runTaskTimer(plugin, 20,20);
-    }
-
-    public void addUser(UUID uuid, ThirstUser user) {
-        users.put(uuid, user);
-    }
-
-    public void removeUser(UUID uuid) {
-        users.remove(uuid);
-    }
-
-    public ThirstUser getUser(UUID uuid) {
-        if(!users.containsKey(uuid)) {
-            return null;
-        }
-        return users.get(uuid);
-    }
-
-    public Collection<ThirstUser> getUsers() {
-        return users.values();
-    }
-
-    public boolean hasUser(UUID uuid) {
-        return users.containsKey(uuid);
     }
 
 }

@@ -1,28 +1,20 @@
 package pl.kpgtb.kthirst.placeholder;
 
-import com.github.kpgtb.ktools.manager.data.DataManager;
 import com.github.kpgtb.ktools.manager.ui.bar.BarManager;
-import com.j256.ormlite.dao.Dao;
+import com.github.kpgtb.ktools.manager.ui.bar.KBar;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import pl.kpgtb.kthirst.data.DbUser;
-import pl.kpgtb.kthirst.manager.user.ThirstUser;
-import pl.kpgtb.kthirst.manager.user.UserManager;
-
-import java.sql.SQLException;
-import java.util.UUID;
 
 public class ThirstPlaceholder extends PlaceholderExpansion {
-    private final UserManager userManager;
-    private final DataManager dataManager;
+    private final KBar thirstBar;
     private final BarManager barManager;
 
-    public ThirstPlaceholder(UserManager userManager, DataManager dataManager, BarManager barManager) {
-        this.userManager = userManager;
-        this.dataManager = dataManager;
+    public ThirstPlaceholder(KBar thirstBar, BarManager barManager) {
+        this.thirstBar = thirstBar;
         this.barManager = barManager;
     }
 
@@ -43,27 +35,16 @@ public class ThirstPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
-        OfflinePlayer target = player;
+        Player target = null;
+        if(player != null && player.isOnline()) {
+            target = player.getPlayer();
+        }
         if(!params.isEmpty()) {
-            target = Bukkit.getOfflinePlayer(params);
+            target = Bukkit.getPlayer(params);
         }
-        UUID targetUUID = target.getUniqueId();
-        ThirstUser user = userManager.getUser(targetUUID);
-        double thirst = 0.0;
-        if(user == null) {
-            Dao<DbUser, UUID> usersDAO = dataManager.getDao(DbUser.class, UUID.class);
-            try {
-                if(!usersDAO.idExists(targetUUID)) {
-                    return "";
-                }
-                thirst = usersDAO.queryForId(targetUUID).getThirst();
-            } catch (SQLException e) {
-                return "";
-            }
-        } else {
-            thirst = barManager.getValue(barManager.getBar("thirst"),player.getPlayer());
+        if(target == null) {
+            return "0.0";
         }
-
-        return String.valueOf(thirst);
+        return String.valueOf(barManager.getValue(thirstBar,target));
     }
 }

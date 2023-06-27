@@ -112,10 +112,6 @@ public class DrinkEditGUI extends KGui{
                 changeName.setClickAction((e,place) -> {
                     new KWriteGui(wrapper, this, (Player) e.getWhoClicked(), (text) -> {
                         newName = wrapper.getLanguageManager().convertMmToString(text);
-                        changeName.setItemBuilder(
-                                changeName.getItemBuilder().lore(newName,0)
-                        );
-                        update();
                     }).open();
                 });
                 mainContainer.setItem(1, 1, changeName);
@@ -125,16 +121,11 @@ public class DrinkEditGUI extends KGui{
                 GuiItem changePoints = new GuiItem(
                         new ItemBuilder(Material.GLASS_BOTTLE)
                                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "changePoints"))
-                                .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentPoints", Placeholder.unparsed("value", newPoints+"")))
+                                .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentPoints", Placeholder.unparsed("value", String.valueOf(newPoints))))
                 );
                 changePoints.setClickAction((e,place) -> {
                     new KCountGui(wrapper, this, (value) -> {
                         newPoints = value;
-                        changePoints.setItemBuilder(
-                                changePoints.getItemBuilder()
-                                        .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentPoints", Placeholder.unparsed("value", newPoints+"")))
-                        );
-                        update();
                     }, player, newPoints, 0, 1000, true, Material.GLASS_BOTTLE).open(player);
                 });
                 mainContainer.setItem(1, 2, changePoints);
@@ -144,16 +135,11 @@ public class DrinkEditGUI extends KGui{
                 GuiItem changeCustomModelData = new GuiItem(
                         new ItemBuilder(Material.ITEM_FRAME)
                                 .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "changeCustomModelData"))
-                                .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentCustomModelData", Placeholder.unparsed("value", newCMD+"")))
+                                .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentCustomModelData", Placeholder.unparsed("value", String.valueOf(newCMD))))
                 );
                 changeCustomModelData.setClickAction((e,place) -> {
                     new KCountGui(wrapper, this, (value) -> {
                         newCMD = (int) value;
-                        changeCustomModelData.setItemBuilder(
-                                changeCustomModelData.getItemBuilder()
-                                        .lore(wrapper.getLanguageManager().getString(LanguageLevel.PLUGIN, "currentCustomModelData", Placeholder.unparsed("value", newCMD+"")))
-                        );
-                        update();
                     }, player, drink.getCustomModelData(), 0, 10000, false, Material.ITEM_FRAME).open(player);
                 });
                 mainContainer.setItem(1, 3, changeCustomModelData);
@@ -162,16 +148,11 @@ public class DrinkEditGUI extends KGui{
             {
                 GuiItem changeRed = new GuiItem(new ItemBuilder(Material.RED_DYE)
                         .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "changeColorRed"))
-                        .lore(ChatColor.RED + "" + newColor.getRed())
+                        .lore(ChatColor.RED + String.valueOf(newColor.getRed()))
                 );
                 changeRed.setClickAction((e,place) -> {
                     new KCountGui(wrapper, this, (value) -> {
                         newColor = new Color((int) value, newColor.getGreen(), newColor.getBlue());
-                        changeRed.setItemBuilder(
-                                changeRed.getItemBuilder()
-                                        .lore(ChatColor.RED + "" + newColor.getRed(),0)
-                        );
-                        update();
                     }, player, drink.getColor().getRed(), 0, 255, false, Material.RED_DYE).open(player);
                 });
                 mainContainer.setItem(3, 1, changeRed);
@@ -180,16 +161,11 @@ public class DrinkEditGUI extends KGui{
             {
                 GuiItem changeGreen = new GuiItem(new ItemBuilder(Material.GREEN_DYE)
                         .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "changeColorGreen"))
-                        .lore(ChatColor.GREEN + "" + newColor.getGreen())
+                        .lore(ChatColor.GREEN + String.valueOf(newColor.getGreen()))
                 );
                 changeGreen.setClickAction((e,place) -> {
                     new KCountGui(wrapper, this, (value) -> {
                         newColor = new Color(newColor.getRed(), (int) value, newColor.getBlue());
-                        changeGreen.setItemBuilder(
-                                changeGreen.getItemBuilder()
-                                        .lore(ChatColor.GREEN + "" + newColor.getGreen(),0)
-                        );
-                        this.update();
                     }, player, drink.getColor().getGreen(), 0, 255, false, Material.GREEN_DYE).open(player);
                 });
                 mainContainer.setItem(3, 2, changeGreen);
@@ -198,18 +174,12 @@ public class DrinkEditGUI extends KGui{
             {
                 GuiItem changeBlue = new GuiItem(new ItemBuilder(Material.BLUE_DYE)
                         .displayname(wrapper.getLanguageManager().getSingleString(LanguageLevel.PLUGIN, "changeColorBlue"))
-                        .lore(ChatColor.BLUE + "" + newColor.getBlue())
+                        .lore(ChatColor.BLUE + String.valueOf(newColor.getBlue()))
                         .build()
                 );
                 changeBlue.setClickAction((e,place) -> {
                     new KCountGui(wrapper, this, (value) -> {
                         newColor = new Color(newColor.getRed(), newColor.getGreen(), (int) value);
-                        changeBlue.setItemBuilder(
-                                changeBlue.getItemBuilder()
-                                        .lore(ChatColor.BLUE + "" + newColor.getBlue(),0)
-                        );
-                        update();
-
                     }, player, drink.getColor().getBlue(), 0, 255, false, Material.BLUE_DYE).open(player);
                 });
                 mainContainer.setItem(3, 3, changeBlue);
@@ -224,10 +194,6 @@ public class DrinkEditGUI extends KGui{
                 changeLore.setClickAction((e,place) -> {
                     new LoreEditGUI(wrapper,this,(lore) -> {
                         newLore = lore;
-                        changeLore.setItemBuilder(changeLore.getItemBuilder()
-                                .lore(newLore)
-                        );
-                        update();
                     },player,newLore).open(player);
                 });
                 mainContainer.setItem(5, 1, changeLore);
@@ -242,10 +208,6 @@ public class DrinkEditGUI extends KGui{
                 changeEffects.setClickAction((e,place) -> {
                     new EffectsEditGUI(wrapper,this,(effects) -> {
                         newEffects = effects;
-                        changeEffects.setItemBuilder(changeEffects.getItemBuilder()
-                                .lore(getEffectsAsEntries())
-                        );
-                        this.update();
                     },player,newEffects).open(player);
                 });
                 mainContainer.setItem(5, 3, changeEffects);
@@ -261,8 +223,8 @@ public class DrinkEditGUI extends KGui{
                         LanguageLevel.PLUGIN,
                         "effectListEntry",
                         Placeholder.unparsed("name", effect.getType()),
-                        Placeholder.unparsed("amplifier", effect.getAmplifier()+""),
-                        Placeholder.unparsed("duration", effect.getDuration()+"")
+                        Placeholder.unparsed("amplifier", String.valueOf(effect.getAmplifier())),
+                        Placeholder.unparsed("duration", String.valueOf(effect.getDuration()))
                 ))
                 .collect(Collectors.toList());
     }

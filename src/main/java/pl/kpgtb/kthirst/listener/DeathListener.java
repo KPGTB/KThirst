@@ -5,11 +5,7 @@ import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import pl.kpgtb.kthirst.manager.user.ThirstUser;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
-
-import java.sql.SQLException;
-import java.util.UUID;
 
 public class DeathListener extends KListener {
     private final ThirstWrapper wrapper;
@@ -20,19 +16,12 @@ public class DeathListener extends KListener {
     }
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent event) throws SQLException {
-        Player player =event.getEntity();
-        UUID uuid = player.getUniqueId();
-        ThirstUser user = wrapper.getUserManager().getUser(uuid);
-        if(user == null) {
-            return;
-        }
+    public void onDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
         wrapper.getBarManager().setValue(
-                wrapper.getBarManager().getBar("thirst"),
+                wrapper.getThirstBar(),
                 player,
-                user.getMaxThirst()
+                wrapper.getThirstBar().getDefaultValue()
         );
-        user.save();
-        user.setDamaging(false);
     }
 }

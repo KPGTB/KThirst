@@ -2,7 +2,6 @@ package pl.kpgtb.kthirst.recipe;
 
 import com.github.kpgtb.ktools.manager.recipe.KRecipe;
 import com.github.kpgtb.ktools.util.wrapper.ToolsObjectWrapper;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;

@@ -76,8 +76,6 @@ public class EffectCreatorGUI extends KGui{
                    type = "WRONG";
                }
                effect.setType(type);
-               setType.setItemBuilder(setType.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getType()),0));
-                this.update();
             }).open();
         });
         guiContainer.setItem(3,0,setType);
@@ -90,8 +88,6 @@ public class EffectCreatorGUI extends KGui{
             redirect = true;
             new KCountGui(wrapper,this,value -> {
                 effect.setAmplifier((int) value);
-                setAmplifier.setItemBuilder(setAmplifier.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getAmplifier()),0));
-                this.update();
             }, player,effect.getAmplifier(),0,254,false,Material.GLOWSTONE_DUST).open(player);
         });
         guiContainer.setItem(4,0,setAmplifier);
@@ -104,8 +100,6 @@ public class EffectCreatorGUI extends KGui{
             redirect = true;
             new KCountGui(wrapper,this,value -> {
                 effect.setDuration((int) value);
-                setDuration.setItemBuilder(setDuration.getItemBuilder().lore(wrapper.getLanguageManager().convertMmToString("<white><b>" + effect.getDuration()),0));
-                this.update();
             }, player,effect.getDuration(),0,10000000,false,Material.CLOCK).open(player);
         });
         guiContainer.setItem(5,0,setDuration);

@@ -11,6 +11,7 @@ import com.github.kpgtb.ktools.manager.resourcepack.ResourcePackManager;
 import com.github.kpgtb.ktools.manager.ui.bar.BarIcons;
 import com.github.kpgtb.ktools.manager.ui.bar.BarManager;
 import com.github.kpgtb.ktools.manager.ui.bar.KBar;
+import com.github.kpgtb.ktools.manager.ui.bar.save.PlayerCacheMethod;
 import com.github.kpgtb.ktools.manager.updater.SpigotUpdater;
 import com.github.kpgtb.ktools.manager.updater.UpdaterManager;
 import com.github.kpgtb.ktools.util.bstats.Metrics;
@@ -30,9 +31,7 @@ import pl.kpgtb.kthirst.manager.drink.DrinkManager;
 import pl.kpgtb.kthirst.manager.machine.BaseMachine;
 import pl.kpgtb.kthirst.manager.machine.MachineManager;
 import pl.kpgtb.kthirst.manager.machine.MachineRecipe;
-import pl.kpgtb.kthirst.manager.user.ThirstUser;
 import pl.kpgtb.kthirst.manager.user.UserManager;
-import pl.kpgtb.kthirst.manager.user.UserSaveMethod;
 import pl.kpgtb.kthirst.placeholder.ThirstPlaceholder;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
@@ -41,7 +40,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public final class Kthirst extends JavaPlugin {
+public final class KThirst extends JavaPlugin {
 
     private BukkitAudiences adventure;
     private static UserManager userManager;
@@ -61,13 +60,12 @@ public final class Kthirst extends JavaPlugin {
         DataManager data = initializer.getGlobalManagersWrapper().getDataManager();
         data.registerTables(packageUtil.get("data"), getFile());
 
-        ResourcePackManager resourcePack = initializer.getGlobalManagersWrapper().getResourcepackManager();
+        ResourcePackManager resourcePack = initializer.getGlobalManagersWrapper().getResourcePackManager();
         BarManager barManager = initializer.getGlobalManagersWrapper().getBarManager();
 
-        userManager = new UserManager(this);
         KBar thirstBar = new KBar(
                 "thirst",
-                new UserSaveMethod(userManager),
+                new PlayerCacheMethod(),
                 Arrays.asList(new BarIcons(
                         0.0,
                         Double.MAX_VALUE,
@@ -76,7 +74,7 @@ public final class Kthirst extends JavaPlugin {
                         "resourcepack/waterhalf.png",
                         "resourcepack/waterempty.png",
                         9,
-                        9
+                        10
                 )),
                 640614385,
                 20.0,
@@ -89,16 +87,15 @@ public final class Kthirst extends JavaPlugin {
         barManager.registerBar(thirstBar);
 
         resourcePack.setRequired(true);
-        resourcePack.registerCustomChar(packageUtil.getTag(), "\uF901", "thirstmachinemenu.png", getResource("resourcepack/thirstmachinemenu.png"), 71, 13, 176);
-        resourcePack.registerCustomChar(packageUtil.getTag(), "\uF902", "thirstmachineprogress.png", getResource("resourcepack/thirstmachineprogress.png"), 4, -29, 1);
-
-        userManager.prepare(thirstBar,barManager);
+        resourcePack.registerCustomChar(packageUtil.getTag(), "\uF901", "thirstmachinemenu.png", getResource("resourcepack/thirstmachinemenu.png"), 71, 13, 176.0);
+        resourcePack.registerCustomChar(packageUtil.getTag(), "\uF902", "thirstmachineprogress.png", getResource("resourcepack/thirstmachineprogress.png"), 4, -29, 1.0);
 
         DrinkManager drinkManager = new DrinkManager();
-
         machineManager = new MachineManager(data,language,this);
+        userManager = new UserManager(this,thirstBar,barManager);
+        userManager.prepare();
 
-        ThirstWrapper wrapper = new ThirstWrapper( initializer, drinkManager, userManager, machineManager);
+        ThirstWrapper wrapper = new ThirstWrapper( initializer, drinkManager, userManager, machineManager, thirstBar);
 
         {
             drinkManager.setWrapper(wrapper);
@@ -160,19 +157,19 @@ public final class Kthirst extends JavaPlugin {
         recipeManager.registerRecipes(packageUtil.get("recipe"));
 
         if(machineManager.getInventoryHelper() == null) {
-            wrapper.getDebugManager().sendWarning(DebugType.START, "This version is not supported by Kthirst!", true);
+            wrapper.getDebugManager().sendWarning(DebugType.START, "This version is not supported by KThirst!", true);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new ThirstPlaceholder(userManager,data, barManager).register();
+            new ThirstPlaceholder(thirstBar, barManager).register();
         }
 
         UpdaterManager updater = new UpdaterManager(getDescription(), new SpigotUpdater("103387"), wrapper.getDebugManager());
         updater.checkUpdate();
 
-        Metrics metrics = new Metrics(this,18407);
+        new Metrics(this,18407);
     }
 
     private void registerThirstDrinks(DrinkManager drinkManager, LanguageManager language) {
@@ -214,16 +211,6 @@ public final class Kthirst extends JavaPlugin {
     public void onDisable() {
         if(adventure != null) {
             adventure.close();
-        }
-
-        if(userManager != null) {
-            for(ThirstUser user : userManager.getUsers()) {
-                try {
-                    user.save();
-                } catch (SQLException e) {
-                    continue;
-                }
-            }
         }
 
         if(machineManager != null) {

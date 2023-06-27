@@ -1,5 +1,5 @@
-# Kthirst
-[![](https://jitpack.io/v/KPGTB/Kthirst.svg)](https://jitpack.io/#KPGTB/Kthirst)
+# KThirst
+[![](https://jitpack.io/v/KPGTB/KThirst.svg)](https://jitpack.io/#KPGTB/KThirst)
 ![Spigot](https://img.shields.io/badge/Spigot-1.14--1.19-yellow)
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange)
 ![Author](https://img.shields.io/badge/Author-KPG--TB-green)
@@ -9,8 +9,8 @@ Spigot plugin for minecraft 1.14.-1.19. This plugin adds thirst, drinks and mach
 # Instalation
 
 Download and put to ./plugins/ these plugins:
-- [Kthirst](https://github.com/KPGTB/KKthirst/releases)
-- [Ktools](https://github.com/KPGTB/Ktools/releases)
+- [KThirst](https://github.com/KPGTB/KThirst/releases)
+- [KTools](https://github.com/KPGTB/KTools/releases)
 - [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
 
 # What this plugin adds?
@@ -42,9 +42,9 @@ You can create your own drink with commands!
 
 ### Commands
 
-Check commands in ./plugins/Kthirst/commands.yml
+Check commands in ./plugins/KThirst/commands.yml
 AND
-./plugins/Ktools/commands.yml
+./plugins/KTools/commands.yml
 
 # Maven
 
