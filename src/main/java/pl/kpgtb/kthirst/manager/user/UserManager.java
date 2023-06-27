@@ -20,19 +20,27 @@ import com.github.kpgtb.ktools.manager.ui.bar.BarManager;
 import com.github.kpgtb.ktools.manager.ui.bar.KBar;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class UserManager {
 
     private final JavaPlugin plugin;
     private final KBar thirstBar;
     private final BarManager barManager;
+    private final List<UUID> damaging;
 
     public UserManager(JavaPlugin plugin, KBar thirstBar, BarManager barManager) {
         this.plugin = plugin;
         this.thirstBar = thirstBar;
         this.barManager = barManager;
+        this.damaging = new ArrayList<>();
     }
 
     public void prepare() {
@@ -52,12 +60,39 @@ public class UserManager {
                    userThirst -= thirstPerMinute;
                    if(userThirst < 0.0) {
                        userThirst = 0.0;
-                       p.damage(hpPerSecond);
+                        if(!damaging.contains(p.getUniqueId())) {
+                            damaging.add(p.getUniqueId());
+                        }
                    }
                    barManager.setValue(thirstBar,p,userThirst);
                });
             }
         }.runTaskTimer(plugin, 60 * 20, 60 * 20);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                new ArrayList<>(damaging).forEach(uuid -> {
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+                    if(!op.isOnline()) {
+                        damaging.remove(uuid);
+                        return;
+                    }
+                    Player p = op.getPlayer();
+                    GameMode gm = p.getGameMode();
+                    if(gm.equals(GameMode.CREATIVE) || gm.equals(GameMode.SPECTATOR)) {
+                        damaging.remove(uuid);
+                        return;
+                    }
+                    double userThirst = barManager.getValue(thirstBar,p);
+                    if(userThirst > 0.0) {
+                        damaging.remove(uuid);
+                        return;
+                    }
+                    p.damage(hpPerSecond);
+                });
+            }
+        }.runTaskTimer(plugin,20,20);
     }
 
 }
