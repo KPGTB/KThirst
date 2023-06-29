@@ -1,5 +1,5 @@
 [![](https://jitpack.io/v/KPGTB/KThirst.svg)](https://jitpack.io/#KPGTB/KThirst)
-![Spigot](https://img.shields.io/badge/Spigot-1.14--1.19-yellow)
+![Spigot](https://img.shields.io/badge/Spigot-1.14--1.20-yellow)
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange)
 ![Author](https://img.shields.io/badge/Author-KPG--TB-green)
 ---
