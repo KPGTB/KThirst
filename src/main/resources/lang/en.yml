@@ -31,7 +31,7 @@ default_drinks:
     - "<blue>Clean, filtered water."
     - "<blue>Drink it when you want!"
     - ""
-  dirtyWaterName: "<black>Dirty Water Bottle"
+  dirtyWaterName: "<gray>Dirty Water Bottle"
   dirtyWaterLore:
     - ""
     - "<gold>Bad, dirty water."
