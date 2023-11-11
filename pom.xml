@@ -6,12 +6,12 @@
 
     <groupId>pl.kpgtb</groupId>
     <artifactId>KThirst</artifactId>
-    <version>2.2.2-SNAPSHOT</version>
+    <version>2.2.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
 
-    <description>Spigot plugin for minecraft 1.14.-1.19. This plugin adds thirst, drinks and machines</description>
+    <description>Spigot plugin for minecraft 1.14.-1.20. This plugin adds thirst, drinks and machines</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>com.github.KPGTB</groupId>
             <artifactId>KTools</artifactId>
-            <version>2.2.2</version>
+            <version>2.2.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

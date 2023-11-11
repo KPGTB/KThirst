@@ -31,7 +31,7 @@ public class InteractListener extends KListener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+        if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && !player.isSneaking()) {
             for(Location location : wrapper.getMachineManager().getMachinesLocation()) {
                 Location clickedLocation = event.getClickedBlock().getLocation();
                 if(location.equals(clickedLocation)) {

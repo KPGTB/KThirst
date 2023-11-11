@@ -18,10 +18,13 @@ public class DeathListener extends KListener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        wrapper.getBarManager().setValue(
-                wrapper.getThirstBar(),
-                player,
-                wrapper.getThirstBar().getDefaultValue()
-        );
+        if(wrapper.getConfig().getBoolean("fillWaterOnDeath")) {
+            wrapper.getBarManager().setValue(
+                    wrapper.getThirstBar(),
+                    player,
+                    wrapper.getThirstBar().getDefaultValue()
+            );
+        }
+
     }
 }
