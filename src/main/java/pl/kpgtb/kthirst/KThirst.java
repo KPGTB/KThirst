@@ -22,6 +22,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
@@ -33,6 +34,7 @@ import pl.kpgtb.kthirst.manager.machine.MachineManager;
 import pl.kpgtb.kthirst.manager.machine.MachineRecipe;
 import pl.kpgtb.kthirst.manager.user.UserManager;
 import pl.kpgtb.kthirst.placeholder.ThirstPlaceholder;
+import pl.kpgtb.kthirst.util.ConfigUtil;
 import pl.kpgtb.kthirst.util.ThirstWrapper;
 
 import java.awt.*;
@@ -173,35 +175,26 @@ public final class KThirst extends JavaPlugin {
     }
 
     private void registerThirstDrinks(DrinkManager drinkManager, LanguageManager language) {
+        ConfigurationSection waterSection = getConfig().getConfigurationSection("default_drinks.clean");
         DbDrink water = new DbDrink(
                 "clean_water",
-                10.0,
-                new ArrayList<>(),
+                waterSection.getDouble("points"),
+                ConfigUtil.getEffects(waterSection.getStringList("effects")),
                 language.getSingleString(LanguageLevel.PLUGIN, "cleanWaterName"),
                 language.getString(LanguageLevel.PLUGIN, "cleanWaterLore"),
-                Color.BLUE,
+                ConfigUtil.getColor(waterSection.getConfigurationSection("color")),
                 150
         );
         drinkManager.registerAddon(water);
 
+        ConfigurationSection dirtySection = getConfig().getConfigurationSection("default_drinks.dirty");
         DbDrink dirty = new DbDrink(
                 "dirty_water",
-                5.0,
-                Arrays.asList(
-                        new DrinkEffect(
-                                PotionEffectType.WEAKNESS.getName(),
-                                1200,
-                                1
-                        ),
-                        new DrinkEffect(
-                                PotionEffectType.POISON.getName(),
-                                200,
-                                0
-                        )
-                ),
+                dirtySection.getDouble("points"),
+                ConfigUtil.getEffects(dirtySection.getStringList("effects")),
                 language.getSingleString(LanguageLevel.PLUGIN, "dirtyWaterName"),
                 language.getString(LanguageLevel.PLUGIN, "dirtyWaterLore"),
-                new Color(44, 18, 2),
+                ConfigUtil.getColor(dirtySection.getConfigurationSection("color")),
                 151
         );
         drinkManager.registerAddon(dirty);

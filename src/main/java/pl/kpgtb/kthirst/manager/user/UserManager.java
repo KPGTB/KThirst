@@ -44,8 +44,9 @@ public class UserManager {
     }
 
     public void prepare() {
-        final double thirstPerMinute = 0.5;
-        final double hpPerSecond = 1.0;
+        final double thirstPerMinute = plugin.getConfig().getDouble("thirstPerMinute");
+        final double hpPerSecond = plugin.getConfig().getDouble("hpPerSecond");
+        final List<String> disabledWorlds = plugin.getConfig().getStringList("disabledWorlds");
 
         new BukkitRunnable() {
             @Override
@@ -55,10 +56,13 @@ public class UserManager {
                    if(gm.equals(GameMode.CREATIVE) || gm.equals(GameMode.SPECTATOR)) {
                        return;
                    }
+                   if(disabledWorlds.contains(p.getWorld().getName())) {
+                       return;
+                   }
 
                    double userThirst = barManager.getValue(thirstBar,p);
                    userThirst -= thirstPerMinute;
-                   if(userThirst < 0.0) {
+                   if(userThirst <= 0.0) {
                        userThirst = 0.0;
                         if(!damaging.contains(p.getUniqueId())) {
                             damaging.add(p.getUniqueId());

@@ -1,2 +1,25 @@
 lang: "en"
 fillWaterOnDeath: true
+thirstPerMinute: 0.5
+hpPerSecond: 1.0
+disabledWorlds: ["world_the_end"]
+# Disable UI bar for bedrock users. It requires floodgate with configured prefix
+disableBedrockUI: true
+floodgatePrefix: "."
+default_drinks:
+  clean:
+    points: 10.0
+    effects: []
+    color:
+      r: 0
+      g: 0
+      b: 255
+  dirty:
+    points: 5.0
+    effects:
+      - "WEAKNESS 1200 1"
+      - "POISON 200 0"
+    color:
+      r: 44
+      g: 18
+      b: 2
