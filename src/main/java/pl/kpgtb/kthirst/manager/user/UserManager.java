@@ -46,6 +46,7 @@ public class UserManager {
     public void prepare() {
         final double thirstPerMinute = plugin.getConfig().getDouble("thirstPerMinute");
         final double hpPerSecond = plugin.getConfig().getDouble("hpPerSecond");
+        final double minHP = plugin.getConfig().getDouble("minHP");
         final List<String> disabledWorlds = plugin.getConfig().getStringList("disabledWorlds");
 
         new BukkitRunnable() {
@@ -93,7 +94,14 @@ public class UserManager {
                         damaging.remove(uuid);
                         return;
                     }
-                    p.damage(hpPerSecond);
+                    if(p.getHealth() - hpPerSecond < minHP) {
+                        double hpToDeal = p.getHealth() - minHP;
+                        if(hpToDeal > 0.0) {
+                            p.damage(hpToDeal);
+                        }
+                    } else {
+                        p.damage(hpPerSecond);
+                    }
                 });
             }
         }.runTaskTimer(plugin,20,20);

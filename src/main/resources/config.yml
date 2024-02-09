@@ -2,6 +2,9 @@ lang: "en"
 fillWaterOnDeath: true
 thirstPerMinute: 0.5
 hpPerSecond: 1.0
+# When playerHP - hpPerSecond < minHP then plugin will set playerHp to that value
+# Can be used to set how much damage can be dealt to player by thirst
+minHP: 0.0
 disabledWorlds: ["world_the_end"]
 # Disable UI bar for bedrock users. It requires floodgate with configured prefix
 disableBedrockUI: true
