@@ -8,6 +8,8 @@ minHP: 0.0
 disabledWorlds: ["world_the_end"]
 # Disable UI bar for bedrock users. It requires floodgate with configured prefix
 disableBedrockUI: true
+# Disable entire thirst system for bedrock users. It requires floodgate with configured prefix
+disableBedrockThirst: false
 floodgatePrefix: "."
 default_drinks:
   clean:

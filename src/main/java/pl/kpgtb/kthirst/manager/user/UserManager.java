@@ -35,12 +35,16 @@ public class UserManager {
     private final KBar thirstBar;
     private final BarManager barManager;
     private final List<UUID> damaging;
+    private final boolean disableBedrock;
+    private final String bedrockPrefix;
 
     public UserManager(JavaPlugin plugin, KBar thirstBar, BarManager barManager) {
         this.plugin = plugin;
         this.thirstBar = thirstBar;
         this.barManager = barManager;
         this.damaging = new ArrayList<>();
+        this.disableBedrock = plugin.getConfig().getBoolean("disableBedrockThirst");
+        this.bedrockPrefix = plugin.getConfig().getString("floodgatePrefix", ".");
     }
 
     public void prepare() {
@@ -58,6 +62,9 @@ public class UserManager {
                        return;
                    }
                    if(disabledWorlds.contains(p.getWorld().getName())) {
+                       return;
+                   }
+                   if(disableBedrock && (p.getName().startsWith(bedrockPrefix) || p.getDisplayName().startsWith(bedrockPrefix))) {
                        return;
                    }
 
