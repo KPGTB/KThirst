@@ -45,7 +45,6 @@ import java.util.Arrays;
 public final class KThirst extends JavaPlugin {
 
     private BukkitAudiences adventure;
-    private static UserManager userManager;
     private MachineManager machineManager;
 
     @Override
@@ -94,7 +93,7 @@ public final class KThirst extends JavaPlugin {
 
         DrinkManager drinkManager = new DrinkManager();
         machineManager = new MachineManager(data,language,this);
-        userManager = new UserManager(this,thirstBar,barManager);
+        UserManager userManager = new UserManager(this, thirstBar, barManager);
         userManager.prepare();
 
         ThirstWrapper wrapper = new ThirstWrapper( initializer, drinkManager, userManager, machineManager, thirstBar);
